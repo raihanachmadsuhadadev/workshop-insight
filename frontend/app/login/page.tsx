@@ -3,19 +3,34 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LockKeyhole, Mail, Wrench } from "lucide-react";
+import { AlertCircle, Loader2, LockKeyhole, Mail, Wrench } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/auth-context";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState("admin@starmotor.test");
+  const [password, setPassword] = useState("password");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    router.push(email.toLowerCase().includes("owner") ? "/owner/dashboard" : "/admin/dashboard");
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const user = await login(email, password);
+      router.replace(user.role === "owner" ? "/owner/dashboard" : "/admin/dashboard");
+    } catch (loginError) {
+      setError(loginError instanceof Error ? loginError.message : "Login gagal.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -34,12 +49,12 @@ export default function LoginPage() {
             Masuk ke sistem transaksi dan analisis Star Motor.
           </h1>
           <p className="mt-5 text-base leading-8 text-slate-300">
-            UI login sementara untuk memilih dashboard admin atau owner sebelum autentikasi
-            Laravel Sanctum diaktifkan.
+            Login menggunakan Laravel Sanctum untuk masuk ke dashboard sesuai role admin atau
+            owner.
           </p>
         </div>
 
-        <p className="text-sm text-slate-500">© 2026 Star Motor Insight</p>
+        <p className="text-sm text-slate-500">(c) 2026 Star Motor Insight</p>
       </section>
 
       <section className="flex items-center justify-center bg-slate-50 px-4 py-10 text-slate-900">
@@ -55,6 +70,13 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            {error ? (
+              <div className="flex gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                <span>{error}</span>
+              </div>
+            ) : null}
+
             <label className="block">
               <span className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-700">
                 <Mail className="h-4 w-4 text-orange-500" aria-hidden="true" />
@@ -68,15 +90,26 @@ export default function LoginPage() {
                 required
               />
             </label>
+
             <label className="block">
               <span className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-700">
                 <LockKeyhole className="h-4 w-4 text-orange-500" aria-hidden="true" />
                 Password
               </span>
-              <Input type="password" placeholder="password" defaultValue="password" required />
+              <Input
+                type="password"
+                placeholder="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
             </label>
-            <Button type="submit" className="w-full">
-              Masuk
+
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              ) : null}
+              {isSubmitting ? "Memproses..." : "Masuk"}
             </Button>
           </form>
 

@@ -1,7 +1,11 @@
-import { Bell, Search } from "lucide-react";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { Bell, LogOut, Search } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/auth-context";
 
 export function Topbar({
   role,
@@ -10,6 +14,21 @@ export function Topbar({
   role: "Admin" | "Owner";
   name: string;
 }) {
+  const router = useRouter();
+  const { user, logout } = useAuth();
+  const displayName = user?.name ?? name;
+  const displayRole = user?.role === "owner" ? "Owner" : role;
+  const initials = displayName
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2);
+
+  async function handleLogout() {
+    await logout();
+    router.replace("/login");
+  }
+
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-slate-50/90 px-4 py-3 backdrop-blur lg:px-8">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -31,17 +50,25 @@ export function Topbar({
           </button>
           <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 text-sm font-bold text-orange-300">
-              {name
-                .split(" ")
-                .map((part) => part[0])
-                .join("")
-                .slice(0, 2)}
+              {initials}
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-950">{name}</p>
-              <Badge tone={role === "Owner" ? "blue" : "orange"}>{role}</Badge>
+              <p className="text-sm font-semibold text-slate-950">{displayName}</p>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge tone={displayRole === "Owner" ? "blue" : "orange"}>{displayRole}</Badge>
+                {user?.email ? <span className="text-xs text-slate-500">{user.email}</span> : null}
+              </div>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+            aria-label="Logout"
+            title="Logout"
+          >
+            <LogOut className="h-5 w-5" aria-hidden="true" />
+          </button>
         </div>
       </div>
     </header>
