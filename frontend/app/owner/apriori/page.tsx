@@ -65,6 +65,7 @@ export default function OwnerAprioriPage() {
       description="Jalankan association rule mining dari transaksi bengkel yang sudah selesai."
       role="Owner"
       userName="Owner Bengkel"
+      eyebrow="Apriori"
     >
       <Toast toast={toast} />
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">

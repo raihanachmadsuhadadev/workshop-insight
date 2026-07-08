@@ -12,6 +12,7 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
+import { Pagination } from "@/components/ui/pagination";
 import { StatCard } from "@/components/ui/stat-card";
 import { Toast, type ToastState } from "@/components/ui/toast";
 import { formatDateTime } from "@/lib/format";
@@ -28,6 +29,10 @@ function pct(value: string | number | null | undefined) {
 export default function AprioriResultDetailPage() {
   const params = useParams<{ id: string }>();
   const [run, setRun] = useState<AprioriRun | null>(null);
+  const [itemsetPage, setItemsetPage] = useState(1);
+  const [itemsetItemsPerPage, setItemsetItemsPerPage] = useState(10);
+  const [rulePage, setRulePage] = useState(1);
+  const [ruleItemsPerPage, setRuleItemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<ToastState>(null);
 
@@ -52,23 +57,32 @@ export default function AprioriResultDetailPage() {
 
   if (isLoading || !run) {
     return (
-      <DashboardLayout title="Detail Hasil Analisis" description="Memuat hasil Apriori." role="Owner" userName="Owner Bengkel">
+      <DashboardLayout title="Detail Hasil Analisis" description="Memuat hasil Apriori." role="Owner" userName="Owner Bengkel" eyebrow="Hasil Analisis">
         <Toast toast={toast} />
         <LoadingState />
       </DashboardLayout>
     );
   }
 
-  const itemsetRows = (run.frequent_itemsets ?? []).map((itemset, index) => [
-    index + 1,
+  const itemsets = run.frequent_itemsets ?? [];
+  const rules = run.rules ?? [];
+  const itemsetTotalPages = Math.max(1, Math.ceil(itemsets.length / itemsetItemsPerPage));
+  const ruleTotalPages = Math.max(1, Math.ceil(rules.length / ruleItemsPerPage));
+  const activeItemsetPage = Math.min(itemsetPage, itemsetTotalPages);
+  const activeRulePage = Math.min(rulePage, ruleTotalPages);
+  const paginatedItemsets = itemsets.slice((activeItemsetPage - 1) * itemsetItemsPerPage, activeItemsetPage * itemsetItemsPerPage);
+  const paginatedRules = rules.slice((activeRulePage - 1) * ruleItemsPerPage, activeRulePage * ruleItemsPerPage);
+
+  const itemsetRows = paginatedItemsets.map((itemset, index) => [
+    (activeItemsetPage - 1) * itemsetItemsPerPage + index + 1,
     joinItems(itemset.items),
     itemset.item_count,
     Number(itemset.support).toFixed(4),
     pct(itemset.support_percentage),
   ]);
 
-  const ruleRows = (run.rules ?? []).map((rule, index) => [
-    index + 1,
+  const ruleRows = paginatedRules.map((rule, index) => [
+    (activeRulePage - 1) * ruleItemsPerPage + index + 1,
     joinItems(rule.antecedents),
     joinItems(rule.consequents),
     pct(rule.support_percentage),
@@ -77,12 +91,12 @@ export default function AprioriResultDetailPage() {
     rule.interpretation ?? "-",
   ]);
 
-  const recommendationRules = (run.rules ?? []).slice(0, 10);
+  const recommendationRules = rules.slice(0, 10);
 
   return (
-    <DashboardLayout title="Detail Hasil Analisis" description={run.code} role="Owner" userName="Owner Bengkel">
+    <DashboardLayout title="Detail Hasil Analisis" description={run.code} role="Owner" userName="Owner Bengkel" eyebrow="Hasil Analisis">
       <Toast toast={toast} />
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="no-print mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Link href="/owner/apriori-results" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-950">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Kembali
@@ -144,19 +158,43 @@ export default function AprioriResultDetailPage() {
       <div className="mt-6 space-y-6">
         <Card>
           <CardTitle title="Frequent Itemsets" />
-          {itemsetRows.length === 0 ? (
+          {itemsets.length === 0 ? (
             <EmptyState title="Belum ada frequent itemset" description="Coba turunkan minimum support." icon={Boxes} />
           ) : (
-            <DataTable columns={["No", "Items", "Item Count", "Support", "Support %"]} rows={itemsetRows} />
+            <>
+              <DataTable columns={["No", "Items", "Item Count", "Support", "Support %"]} rows={itemsetRows} />
+              <Pagination
+                currentPage={activeItemsetPage}
+                totalItems={itemsets.length}
+                itemsPerPage={itemsetItemsPerPage}
+                onPageChange={setItemsetPage}
+                onItemsPerPageChange={(nextItemsPerPage) => {
+                  setItemsetItemsPerPage(nextItemsPerPage);
+                  setItemsetPage(1);
+                }}
+              />
+            </>
           )}
         </Card>
 
         <Card>
           <CardTitle title="Association Rules" />
-          {ruleRows.length === 0 ? (
+          {rules.length === 0 ? (
             <EmptyState title="Belum ada aturan asosiasi" description="Coba turunkan minimum support atau minimum confidence." icon={BrainCircuit} />
           ) : (
-            <DataTable columns={["No", "Antecedents", "Consequents", "Support %", "Confidence %", "Lift", "Interpretation"]} rows={ruleRows} />
+            <>
+              <DataTable columns={["No", "Antecedents", "Consequents", "Support %", "Confidence %", "Lift", "Interpretation"]} rows={ruleRows} />
+              <Pagination
+                currentPage={activeRulePage}
+                totalItems={rules.length}
+                itemsPerPage={ruleItemsPerPage}
+                onPageChange={setRulePage}
+                onItemsPerPageChange={(nextItemsPerPage) => {
+                  setRuleItemsPerPage(nextItemsPerPage);
+                  setRulePage(1);
+                }}
+              />
+            </>
           )}
         </Card>
       </div>

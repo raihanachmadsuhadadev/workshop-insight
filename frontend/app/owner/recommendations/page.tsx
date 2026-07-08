@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
+import { Pagination } from "@/components/ui/pagination";
 import { Select } from "@/components/ui/select";
 import { Toast, type ToastState } from "@/components/ui/toast";
 import { getAprioriRuns, getRecommendations, type AprioriRun, type Recommendation } from "@/lib/services/apriori";
@@ -16,6 +17,8 @@ export default function OwnerRecommendationsPage() {
   const [runs, setRuns] = useState<AprioriRun[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [runId, setRunId] = useState("");
+  const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<ToastState>(null);
 
@@ -37,6 +40,7 @@ export default function OwnerRecommendationsPage() {
         const params: Record<string, string> = { limit: "10" };
         if (runId) params.run_id = runId;
         setRecommendations(await getRecommendations(params));
+        setPage(1);
       } catch {
         setToast({ type: "error", message: "Gagal memuat rekomendasi paket." });
       } finally {
@@ -46,12 +50,17 @@ export default function OwnerRecommendationsPage() {
     loadRecommendations();
   }, [runId]);
 
+  const totalPages = Math.max(1, Math.ceil(recommendations.length / itemsPerPage));
+  const activePage = Math.min(page, totalPages);
+  const paginatedRecommendations = recommendations.slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage);
+
   return (
     <DashboardLayout
       title="Rekomendasi Paket"
       description="Rekomendasi paket servis berdasarkan association rules Apriori."
       role="Owner"
       userName="Owner Bengkel"
+      eyebrow="Rekomendasi"
     >
       <Toast toast={toast} />
       <Card>
@@ -75,7 +84,7 @@ export default function OwnerRecommendationsPage() {
           <Card>
             <CardTitle title="Daftar Rekomendasi Paket" description={`${recommendations.length} rekomendasi ditemukan.`} />
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {recommendations.map((recommendation, index) => (
+              {paginatedRecommendations.map((recommendation, index) => (
                 <div key={`${recommendation.run_id}-${index}`} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
                     <Sparkles className="h-5 w-5" aria-hidden="true" />
@@ -94,6 +103,16 @@ export default function OwnerRecommendationsPage() {
                 </div>
               ))}
             </div>
+            <Pagination
+              currentPage={activePage}
+              totalItems={recommendations.length}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setPage}
+              onItemsPerPageChange={(nextItemsPerPage) => {
+                setItemsPerPage(nextItemsPerPage);
+                setPage(1);
+              }}
+            />
           </Card>
         )}
       </div>

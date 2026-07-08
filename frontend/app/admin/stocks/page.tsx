@@ -10,6 +10,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { LoadingState } from "@/components/ui/loading-state";
+import { Pagination } from "@/components/ui/pagination";
 import { Select } from "@/components/ui/select";
 import { StatCard } from "@/components/ui/stat-card";
 import { Toast, type ToastState } from "@/components/ui/toast";
@@ -43,6 +44,10 @@ export default function AdminStocksPage() {
   const [movements, setMovements] = useState<StockMovement[]>([]);
   const [search, setSearch] = useState("");
   const [movementType, setMovementType] = useState("");
+  const [stockPage, setStockPage] = useState(1);
+  const [stockItemsPerPage, setStockItemsPerPage] = useState(10);
+  const [movementPage, setMovementPage] = useState(1);
+  const [movementItemsPerPage, setMovementItemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<ToastState>(null);
 
@@ -59,6 +64,8 @@ export default function AdminStocksPage() {
         ]);
         setSpareParts(sparePartData);
         setMovements(movementData);
+        setStockPage(1);
+        setMovementPage(1);
       } catch {
         setToast({ type: "error", message: "Gagal memuat data stok." });
       } finally {
@@ -74,7 +81,20 @@ export default function AdminStocksPage() {
   const critical = spareParts.filter((item) => Number(item.current_stock) <= Number(item.minimum_stock)).length;
   const safe = Math.max(0, total - critical);
 
-  const stockRows = spareParts.map((item) => [
+  const stockTotalPages = Math.max(1, Math.ceil(spareParts.length / stockItemsPerPage));
+  const movementTotalPages = Math.max(1, Math.ceil(movements.length / movementItemsPerPage));
+  const activeStockPage = Math.min(stockPage, stockTotalPages);
+  const activeMovementPage = Math.min(movementPage, movementTotalPages);
+  const paginatedSpareParts = useMemo(
+    () => spareParts.slice((activeStockPage - 1) * stockItemsPerPage, activeStockPage * stockItemsPerPage),
+    [activeStockPage, spareParts, stockItemsPerPage],
+  );
+  const paginatedMovements = useMemo(
+    () => movements.slice((activeMovementPage - 1) * movementItemsPerPage, activeMovementPage * movementItemsPerPage),
+    [activeMovementPage, movementItemsPerPage, movements],
+  );
+
+  const stockRows = paginatedSpareParts.map((item) => [
     <span key="code" className="font-semibold">{item.code}</span>,
     item.name,
     item.item_category?.name ?? "-",
@@ -84,7 +104,7 @@ export default function AdminStocksPage() {
   ]);
 
   const movementRows = useMemo(
-    () => movements.map((movement) => [
+    () => paginatedMovements.map((movement) => [
       formatDateTime(movement.created_at),
       movement.spare_part?.name ?? "-",
       movementBadge(movement.movement_type),
@@ -94,7 +114,7 @@ export default function AdminStocksPage() {
       movement.reference_code ?? "-",
       movement.created_by?.name ?? "-",
     ]),
-    [movements],
+    [paginatedMovements],
   );
 
   return (
@@ -103,6 +123,7 @@ export default function AdminStocksPage() {
       description="Pantau stok suku cadang dan riwayat mutasi dari transaksi bengkel."
       role="Admin"
       userName="Admin Kasir"
+      eyebrow="Stok"
     >
       <Toast toast={toast} />
       <div className="grid gap-4 md:grid-cols-3">
@@ -142,6 +163,16 @@ export default function AdminStocksPage() {
               ) : (
                 <DataTable columns={["Kode", "Nama", "Kategori", "Stok Saat Ini", "Stok Minimum", "Status"]} rows={stockRows} />
               )}
+              <Pagination
+                currentPage={activeStockPage}
+                totalItems={spareParts.length}
+                itemsPerPage={stockItemsPerPage}
+                onPageChange={setStockPage}
+                onItemsPerPageChange={(nextItemsPerPage) => {
+                  setStockItemsPerPage(nextItemsPerPage);
+                  setStockPage(1);
+                }}
+              />
             </Card>
 
             <Card>
@@ -151,6 +182,16 @@ export default function AdminStocksPage() {
               ) : (
                 <DataTable columns={["Tanggal", "Suku Cadang", "Tipe", "Qty", "Sebelum", "Sesudah", "Referensi", "Dibuat Oleh"]} rows={movementRows} />
               )}
+              <Pagination
+                currentPage={activeMovementPage}
+                totalItems={movements.length}
+                itemsPerPage={movementItemsPerPage}
+                onPageChange={setMovementPage}
+                onItemsPerPageChange={(nextItemsPerPage) => {
+                  setMovementItemsPerPage(nextItemsPerPage);
+                  setMovementPage(1);
+                }}
+              />
             </Card>
           </>
         )}

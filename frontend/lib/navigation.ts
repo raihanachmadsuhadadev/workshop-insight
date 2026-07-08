@@ -7,7 +7,6 @@ import {
   Gauge,
   PackageSearch,
   ReceiptText,
-  Settings,
   Sparkles,
   UserRoundCog,
   UsersRound,
@@ -32,5 +31,4 @@ export const ownerNavigation = [
   { label: "Hasil Analisis", href: "/owner/apriori-results", icon: ClipboardList },
   { label: "Rekomendasi Paket", href: "/owner/recommendations", icon: Sparkles },
   { label: "Laporan", href: "/owner/reports", icon: FileBarChart },
-  { label: "Pengaturan", href: "/owner/settings", icon: Settings },
 ];

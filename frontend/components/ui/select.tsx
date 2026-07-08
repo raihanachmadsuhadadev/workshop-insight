@@ -6,7 +6,7 @@ export function Select({ className, children, ...props }: SelectHTMLAttributes<H
   return (
     <select
       className={cn(
-        "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100",
+        "neo-select h-11 w-full px-3 text-sm text-slate-900 outline-none transition",
         className,
       )}
       {...props}

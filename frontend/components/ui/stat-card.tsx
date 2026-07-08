@@ -16,13 +16,13 @@ export function StatCard({
   tone?: "orange" | "green" | "red" | "blue" | "slate";
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="neo-card p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-slate-500">{title}</p>
           <p className="mt-2 text-2xl font-bold text-slate-950">{value}</p>
         </div>
-        <div className="rounded-xl bg-slate-950 p-3 text-orange-400">
+        <div className="neo-icon-accent flex h-12 w-12 items-center justify-center rounded-xl">
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
       </div>

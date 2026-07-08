@@ -188,14 +188,14 @@ export default function CreateTransactionPage() {
 
   if (isLoading) {
     return (
-      <DashboardLayout title="Input Transaksi" description="Memuat master data transaksi." role="Admin" userName="Admin Kasir">
+      <DashboardLayout title="Input Transaksi" description="Memuat master data transaksi." role="Admin" userName="Admin Kasir" eyebrow="Transaksi">
         <LoadingState />
       </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout title="Input Transaksi" description="Catat transaksi suku cadang dan layanan servis." role="Admin" userName="Admin Kasir">
+    <DashboardLayout title="Input Transaksi" description="Catat transaksi suku cadang dan layanan servis." role="Admin" userName="Admin Kasir" eyebrow="Transaksi">
       <Toast toast={toast} />
       <div className="mb-4">
         <Link href="/admin/transactions" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-950">

@@ -18,7 +18,7 @@ import { Toast, type ToastState } from "@/components/ui/toast";
 import { formatDateTime, formatRupiah } from "@/lib/format";
 import { getTransactions, type Transaction } from "@/lib/services/transactions";
 
-const perPage = 8;
+const defaultItemsPerPage = 10;
 
 function statusBadge(status: Transaction["status"]) {
   return status === "completed" ? <Badge tone="green">Selesai</Badge> : <Badge tone="red">Dibatalkan</Badge>;
@@ -36,6 +36,7 @@ export default function AdminTransactionsPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(defaultItemsPerPage);
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<ToastState>(null);
 
@@ -63,8 +64,9 @@ export default function AdminTransactionsPage() {
     return () => window.clearTimeout(timeout);
   }, [loadTransactions]);
 
-  const totalPages = Math.max(1, Math.ceil(transactions.length / perPage));
-  const paginated = useMemo(() => transactions.slice((page - 1) * perPage, page * perPage), [page, transactions]);
+  const totalPages = Math.max(1, Math.ceil(transactions.length / itemsPerPage));
+  const activePage = Math.min(page, totalPages);
+  const paginated = useMemo(() => transactions.slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage), [activePage, itemsPerPage, transactions]);
 
   const rows = paginated.map((transaction) => [
     <span key="code" className="font-semibold text-slate-950">{transaction.code}</span>,
@@ -91,6 +93,7 @@ export default function AdminTransactionsPage() {
       description="Kelola transaksi suku cadang dan layanan servis bengkel."
       role="Admin"
       userName="Admin Kasir"
+      eyebrow="Transaksi"
     >
       <Toast toast={toast} />
       <Card>
@@ -144,7 +147,16 @@ export default function AdminTransactionsPage() {
               columns={["Kode", "Tanggal", "Pelanggan", "Mekanik", "Plat Nomor", "Total", "Pembayaran", "Status", "Aksi"]}
               rows={rows}
             />
-            <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+            <Pagination
+              currentPage={activePage}
+              totalItems={transactions.length}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setPage}
+              onItemsPerPageChange={(nextItemsPerPage) => {
+                setItemsPerPage(nextItemsPerPage);
+                setPage(1);
+              }}
+            />
           </Card>
         )}
       </div>

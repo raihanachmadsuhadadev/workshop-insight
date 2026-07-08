@@ -3,11 +3,11 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const tones = {
-  orange: "bg-orange-100 text-orange-700",
-  green: "bg-green-100 text-green-700",
-  red: "bg-red-100 text-red-700",
-  blue: "bg-blue-100 text-blue-700",
-  slate: "bg-slate-100 text-slate-700",
+  orange: "border-orange-200 bg-orange-50 text-orange-700",
+  green: "border-green-200 bg-green-50 text-green-700",
+  red: "border-red-200 bg-red-50 text-red-700",
+  blue: "border-blue-200 bg-blue-50 text-blue-700",
+  slate: "border-slate-200 bg-slate-100 text-slate-600",
 };
 
 export function Badge({
@@ -22,7 +22,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold",
+        "neo-badge inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold",
         tones[tone],
         className,
       )}

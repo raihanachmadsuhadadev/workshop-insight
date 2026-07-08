@@ -55,7 +55,7 @@ type CategoryRecord = MasterRecord & {
   type?: string | null;
 };
 
-const perPage = 8;
+const defaultItemsPerPage = 10;
 
 function getErrorMessage(error: unknown) {
   if (error instanceof AxiosError) {
@@ -110,6 +110,7 @@ export function MasterDataPage({ config }: { config: MasterDataConfig }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(defaultItemsPerPage);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<ToastState>(null);
@@ -160,10 +161,11 @@ export function MasterDataPage({ config }: { config: MasterDataConfig }) {
     return () => window.clearTimeout(timeout);
   }, [loadData]);
 
-  const totalPages = Math.max(1, Math.ceil(records.length / perPage));
+  const totalPages = Math.max(1, Math.ceil(records.length / itemsPerPage));
+  const activePage = Math.min(page, totalPages);
   const paginatedRecords = useMemo(
-    () => records.slice((page - 1) * perPage, page * perPage),
-    [page, records],
+    () => records.slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage),
+    [activePage, itemsPerPage, records],
   );
 
   function openCreateModal() {
@@ -255,6 +257,7 @@ export function MasterDataPage({ config }: { config: MasterDataConfig }) {
       description={config.description}
       role="Admin"
       userName="Admin Kasir"
+      eyebrow="Master Data"
     >
       <Toast toast={toast} />
 
@@ -298,7 +301,16 @@ export function MasterDataPage({ config }: { config: MasterDataConfig }) {
           <Card>
             <CardTitle title={`Daftar ${config.title}`} description={`${records.length} data ditemukan.`} />
             <DataTable columns={columns} rows={rows} />
-            <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+            <Pagination
+              currentPage={activePage}
+              totalItems={records.length}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setPage}
+              onItemsPerPageChange={(nextItemsPerPage) => {
+                setItemsPerPage(nextItemsPerPage);
+                setPage(1);
+              }}
+            />
           </Card>
         )}
       </div>

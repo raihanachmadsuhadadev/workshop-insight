@@ -1,79 +1,124 @@
-import { BarChart3, CircleDollarSign, ClipboardList, Database, Sparkles } from "lucide-react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { BarChart3, CircleDollarSign, ClipboardList, Sparkles, UsersRound } from "lucide-react";
 
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
+import { LoadingState } from "@/components/ui/loading-state";
 import { StatCard } from "@/components/ui/stat-card";
+import { Toast, type ToastState } from "@/components/ui/toast";
+import { formatDateTime, formatRupiah } from "@/lib/format";
+import { getOwnerDashboard, type OwnerDashboardData } from "@/lib/services/dashboard";
+
+function join(items?: string[]) {
+  return items?.join(", ") || "-";
+}
 
 export default function OwnerDashboardPage() {
+  const [data, setData] = useState<OwnerDashboardData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [toast, setToast] = useState<ToastState>(null);
+
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        setData(await getOwnerDashboard());
+      } catch {
+        setToast({ type: "error", message: "Gagal memuat dashboard owner." });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadDashboard();
+  }, []);
+
   return (
-    <DashboardLayout
-      title="Insight Owner Bengkel"
-      description="Lihat performa transaksi, hasil association rule, dan rekomendasi paket servis."
-      role="Owner"
-      userName="Owner Bengkel"
-    >
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Total Transaksi" value="1.284" trend="+8% bulan ini" icon={ClipboardList} />
-        <StatCard
-          title="Total Pendapatan"
-          value="Rp 246 jt"
-          trend="+14% bulan ini"
-          icon={CircleDollarSign}
-          tone="green"
-        />
-        <StatCard title="Total Item Dianalisis" value="68 item" trend="Dataset siap" icon={Database} tone="blue" />
-        <StatCard
-          title="Association Rule Terakhir"
-          value="18 rule"
-          trend="Confidence min. 70%"
-          icon={BarChart3}
-        />
-      </div>
-
-      <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <Card>
-          <CardTitle title="Preview Hasil Apriori" description="Rule dummy dari transaksi servis dan suku cadang." />
-          <DataTable
-            columns={["Rule", "Support", "Confidence", "Lift"]}
-            rows={[
-              ["Oli Mesin -> Servis Ringan", "32%", "82%", "1.34"],
-              ["Tune Up -> Busi", "24%", "76%", "1.21"],
-              ["Kampas Rem -> Rem Safety Check", "19%", "73%", "1.18"],
-            ]}
-          />
-        </Card>
-
-        <Card>
-          <CardTitle title="Rekomendasi Paket" description="Paket awal berbasis pola pembelian." />
-          <div className="space-y-3">
-            {[
-              "Paket Oli + Servis Ringan",
-              "Paket Tune Up + Busi",
-              "Paket Rem Safety Check",
-            ].map((item) => (
-              <div key={item} className="flex items-center gap-3 rounded-xl bg-orange-50 p-4">
-                <Sparkles className="h-5 w-5 text-orange-600" aria-hidden="true" />
-                <span className="font-semibold text-slate-800">{item}</span>
-              </div>
-            ))}
+    <DashboardLayout title="Insight Owner Bengkel" description="Lihat performa transaksi, hasil association rule, dan rekomendasi paket servis." role="Owner" userName="Owner Bengkel">
+      <Toast toast={toast} />
+      {isLoading || !data ? (
+        <LoadingState />
+      ) : (
+        <>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <StatCard title="Total Transaksi" value={String(data.summary.total_transactions)} trend="Semua status" icon={ClipboardList} />
+            <StatCard title="Total Pendapatan" value={formatRupiah(data.summary.total_revenue)} trend="Completed only" icon={CircleDollarSign} tone="green" />
+            <StatCard title="Total Pelanggan" value={String(data.summary.total_customers)} trend={`${data.summary.total_spare_parts} suku cadang`} icon={UsersRound} tone="blue" />
+            <StatCard title="Analisis Apriori" value={String(data.summary.total_apriori_runs)} trend={`${data.summary.low_stock_count} stok kritis`} icon={BarChart3} />
           </div>
-        </Card>
-      </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        {[
-          ["Ringkasan Transaksi", "Transaksi servis ringan mendominasi dataset bulan ini.", "blue"],
-          ["Kualitas Rule", "Sebagian besar rule memenuhi confidence minimum simulasi.", "green"],
-          ["Peluang Paket", "Bundling oli dan servis ringan layak dijadikan promo.", "orange"],
-        ].map(([title, description, tone]) => (
-          <Card key={title}>
-            <Badge tone={tone as "blue" | "green" | "orange"}>{title}</Badge>
-            <p className="mt-4 text-sm leading-6 text-slate-600">{description}</p>
-          </Card>
-        ))}
-      </div>
+          <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+            <Card>
+              <CardTitle title="Latest Apriori Run" description="Hasil analisis terbaru yang sudah completed." />
+              {data.latest_apriori_run ? (
+                <div className="grid gap-3 text-sm md:grid-cols-2">
+                  <Info label="Kode" value={data.latest_apriori_run.code} />
+                  <Info label="Tanggal" value={formatDateTime(data.latest_apriori_run.ran_at)} />
+                  <Info label="Min Support" value={`${Number(data.latest_apriori_run.minimum_support) * 100}%`} />
+                  <Info label="Min Confidence" value={`${Number(data.latest_apriori_run.minimum_confidence) * 100}%`} />
+                  <Info label="Total Rules" value={String(data.latest_apriori_run.total_rules)} />
+                  <Info label="Periode" value={data.latest_apriori_run.start_date || data.latest_apriori_run.end_date ? `${data.latest_apriori_run.start_date ?? "..."} - ${data.latest_apriori_run.end_date ?? "..."}` : "Semua periode"} />
+                </div>
+              ) : <p className="text-sm text-slate-500">Belum ada run Apriori.</p>}
+            </Card>
+
+            <Card>
+              <CardTitle title="Rekomendasi Terbaru" />
+              <div className="space-y-3">
+                {data.latest_recommendations.length === 0 ? <p className="text-sm text-slate-500">Belum ada rekomendasi.</p> : data.latest_recommendations.map((item, index) => (
+                  <div key={`${item.title}-${index}`} className="rounded-xl bg-orange-50 p-4">
+                    <div className="flex items-center gap-3">
+                      <Sparkles className="h-5 w-5 text-orange-600" aria-hidden="true" />
+                      <span className="font-semibold text-slate-800">{item.title}</span>
+                    </div>
+                    <p className="mt-2 text-sm text-slate-500">{item.suggestion}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+
+          <div className="mt-6 grid gap-6 xl:grid-cols-2">
+            <Card>
+              <CardTitle title="Latest Association Rules" />
+              <DataTable
+                columns={["Antecedents", "Consequents", "Support %", "Confidence %", "Lift"]}
+                rows={data.latest_rules.map((rule) => [
+                  join(rule.antecedents),
+                  join(rule.consequents),
+                  `${rule.support_percentage}%`,
+                  `${rule.confidence_percentage}%`,
+                  rule.lift,
+                ])}
+              />
+            </Card>
+            <Card>
+              <CardTitle title="Top Item" description="Suku cadang dan layanan teratas." />
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-3">
+                  <Badge tone="orange">Suku Cadang</Badge>
+                  {data.top_spare_parts.map((item) => <p key={item.item_code} className="text-sm font-semibold text-slate-700">{item.item_name} · {item.total_quantity}x</p>)}
+                </div>
+                <div className="space-y-3">
+                  <Badge tone="blue">Layanan</Badge>
+                  {data.top_services.map((item) => <p key={item.item_code} className="text-sm font-semibold text-slate-700">{item.item_name} · {item.total_quantity}x</p>)}
+                </div>
+              </div>
+            </Card>
+          </div>
+        </>
+      )}
     </DashboardLayout>
+  );
+}
+
+function Info({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl bg-slate-50 p-3">
+      <p className="text-xs font-semibold uppercase text-slate-500">{label}</p>
+      <p className="mt-1 font-semibold text-slate-900">{value}</p>
+    </div>
   );
 }

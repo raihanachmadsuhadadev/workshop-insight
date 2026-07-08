@@ -84,7 +84,7 @@ export default function TransactionDetailPage() {
 
   if (isLoading || !transaction) {
     return (
-      <DashboardLayout title="Detail Transaksi" description="Memuat detail transaksi." role="Admin" userName="Admin Kasir">
+      <DashboardLayout title="Detail Transaksi" description="Memuat detail transaksi." role="Admin" userName="Admin Kasir" eyebrow="Transaksi">
         <Toast toast={toast} />
         <LoadingState />
       </DashboardLayout>
@@ -110,9 +110,9 @@ export default function TransactionDetailPage() {
   ]);
 
   return (
-    <DashboardLayout title="Detail Transaksi" description={transaction.code} role="Admin" userName="Admin Kasir">
+    <DashboardLayout title="Detail Transaksi" description={transaction.code} role="Admin" userName="Admin Kasir" eyebrow="Transaksi">
       <Toast toast={toast} />
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="no-print mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Link href="/admin/transactions" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-950">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Kembali ke Transaksi

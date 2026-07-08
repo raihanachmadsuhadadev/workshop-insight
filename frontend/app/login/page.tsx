@@ -13,8 +13,8 @@ import { useAuth } from "@/context/auth-context";
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState("admin@starmotor.test");
-  const [password, setPassword] = useState("password");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,37 +35,39 @@ export default function LoginPage() {
 
   return (
     <main className="grid min-h-screen bg-slate-950 text-white lg:grid-cols-[1.05fr_0.95fr]">
-      <section className="flex flex-col justify-between px-6 py-8 lg:px-12">
-        <Link href="/" className="flex w-fit items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500">
-            <Wrench className="h-5 w-5" aria-hidden="true" />
-          </span>
-          <span className="text-lg font-bold">Star Motor Insight</span>
-        </Link>
+      <section className="relative flex flex-col justify-between overflow-hidden px-6 py-8 lg:px-12">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.12),transparent_32%),linear-gradient(135deg,#0f172a_0%,#111827_58%,#1e293b_100%)]" />
+        <div className="relative">
+          <Link href="/" className="flex w-fit items-center gap-3">
+            <span className="neo-button neo-button-primary flex h-11 w-11 items-center justify-center">
+              <Wrench className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span className="text-lg font-bold">Star Motor Insight</span>
+          </Link>
+        </div>
 
-        <div className="my-12 max-w-2xl">
+        <div className="relative my-12 max-w-2xl">
           <Badge tone="orange">Dashboard Bengkel</Badge>
           <h1 className="mt-5 text-4xl font-bold leading-tight md:text-5xl">
             Masuk ke sistem transaksi dan analisis Star Motor.
           </h1>
           <p className="mt-5 text-base leading-8 text-slate-300">
-            Login menggunakan Laravel Sanctum untuk masuk ke dashboard sesuai role admin atau
-            owner.
+            Masuk untuk mengelola transaksi, stok, laporan, dan analisis bengkel.
           </p>
         </div>
 
-        <p className="text-sm text-slate-500">(c) 2026 Star Motor Insight</p>
+        <p className="relative text-sm text-slate-400">(c) 2026 Star Motor Insight</p>
       </section>
 
-      <section className="flex items-center justify-center bg-slate-50 px-4 py-10 text-slate-900">
-        <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-950/10">
+      <section className="neo-page flex items-center justify-center px-4 py-10 text-slate-900">
+        <div className="neo-card w-full max-w-md p-6">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-600">
               Login
             </p>
             <h2 className="mt-2 text-2xl font-bold text-slate-950">Masuk Dashboard</h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              Gunakan akun demo untuk melihat tampilan role admin atau owner.
+              Gunakan akun yang telah terdaftar untuk melanjutkan ke dashboard.
             </p>
           </div>
 
@@ -86,7 +88,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="admin@starmotor.test"
+                placeholder="nama@email.com"
                 required
               />
             </label>
@@ -98,7 +100,7 @@ export default function LoginPage() {
               </span>
               <Input
                 type="password"
-                placeholder="password"
+                placeholder="Masukkan password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 required
@@ -112,12 +114,6 @@ export default function LoginPage() {
               {isSubmitting ? "Memproses..." : "Masuk"}
             </Button>
           </form>
-
-          <div className="mt-6 rounded-xl bg-slate-50 p-4 text-xs leading-6 text-slate-500">
-            <p className="font-semibold text-slate-700">Demo akun</p>
-            <p>Admin: admin@starmotor.test / password</p>
-            <p>Owner: owner@starmotor.test / password</p>
-          </div>
         </div>
       </section>
     </main>

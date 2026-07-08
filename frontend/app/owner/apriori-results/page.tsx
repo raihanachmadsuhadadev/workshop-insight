@@ -18,7 +18,7 @@ import { Toast, type ToastState } from "@/components/ui/toast";
 import { formatDateTime } from "@/lib/format";
 import { deleteAprioriRun, getAprioriRuns, type AprioriRun } from "@/lib/services/apriori";
 
-const perPage = 8;
+const defaultItemsPerPage = 10;
 
 function scopeLabel(scope: AprioriRun["item_scope"]) {
   return scope === "spare_part" ? "Suku Cadang" : scope === "service" ? "Layanan" : "Semua";
@@ -28,6 +28,7 @@ export default function AprioriResultsPage() {
   const [runs, setRuns] = useState<AprioriRun[]>([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(defaultItemsPerPage);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingRun, setDeletingRun] = useState<AprioriRun | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
@@ -63,8 +64,9 @@ export default function AprioriResultsPage() {
     }
   }
 
-  const totalPages = Math.max(1, Math.ceil(runs.length / perPage));
-  const paginated = useMemo(() => runs.slice((page - 1) * perPage, page * perPage), [page, runs]);
+  const totalPages = Math.max(1, Math.ceil(runs.length / itemsPerPage));
+  const activePage = Math.min(page, totalPages);
+  const paginated = useMemo(() => runs.slice((activePage - 1) * itemsPerPage, activePage * itemsPerPage), [activePage, itemsPerPage, runs]);
   const rows = paginated.map((run) => [
     <span key="code" className="font-semibold">{run.code}</span>,
     run.name ?? "-",
@@ -87,7 +89,7 @@ export default function AprioriResultsPage() {
   ]);
 
   return (
-    <DashboardLayout title="Hasil Analisis" description="Daftar histori analisis Apriori yang pernah dijalankan." role="Owner" userName="Owner Bengkel">
+    <DashboardLayout title="Hasil Analisis Apriori" description="Daftar histori analisis Apriori yang pernah dijalankan." role="Owner" userName="Owner Bengkel" eyebrow="Hasil Analisis">
       <Toast toast={toast} />
       <Card>
         <label>
@@ -104,7 +106,16 @@ export default function AprioriResultsPage() {
           <Card>
             <CardTitle title="Daftar Hasil Analisis" description={`${runs.length} run ditemukan.`} />
             <DataTable columns={["Kode", "Nama", "Periode", "Scope", "Min Support", "Min Confidence", "Transaksi", "Rules", "Status", "Tanggal", "Aksi"]} rows={rows} />
-            <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+            <Pagination
+              currentPage={activePage}
+              totalItems={runs.length}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setPage}
+              onItemsPerPageChange={(nextItemsPerPage) => {
+                setItemsPerPage(nextItemsPerPage);
+                setPage(1);
+              }}
+            />
           </Card>
         )}
       </div>

@@ -7,10 +7,12 @@ export function PlaceholderPage({
   role,
   title,
   description,
+  eyebrow,
 }: {
   role: "Admin" | "Owner";
   title: string;
   description: string;
+  eyebrow?: string;
 }) {
   return (
     <DashboardLayout
@@ -18,6 +20,7 @@ export function PlaceholderPage({
       description={description}
       role={role}
       userName={role === "Admin" ? "Admin Kasir" : "Owner Bengkel"}
+      eyebrow={eyebrow}
     >
       <EmptyState title={title} description={description} icon={ClipboardList} />
     </DashboardLayout>

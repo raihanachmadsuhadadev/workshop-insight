@@ -4,10 +4,10 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "reac
 import { cn } from "@/lib/utils";
 
 const variants = {
-  primary: "bg-orange-500 text-white shadow-sm hover:bg-orange-600",
-  secondary: "border border-slate-200 bg-white text-slate-800 hover:bg-slate-50",
-  dark: "bg-slate-950 text-white hover:bg-slate-800",
-  ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+  primary: "neo-button neo-button-primary hover:brightness-[1.03]",
+  secondary: "neo-button neo-button-ghost hover:text-slate-950",
+  dark: "neo-button border-slate-800 bg-slate-950 text-white hover:bg-slate-800",
+  ghost: "neo-button neo-button-ghost text-slate-600 hover:text-slate-950",
 };
 
 const sizes = {
@@ -40,6 +40,7 @@ export function Button({
         "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60",
         variants[variant],
         sizes[size],
+        className?.includes("bg-red") && "neo-button-danger",
         className,
       )}
       {...props}

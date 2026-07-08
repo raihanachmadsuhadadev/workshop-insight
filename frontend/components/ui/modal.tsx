@@ -11,14 +11,14 @@ export function Modal({
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/50 p-4">
-      <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl bg-white shadow-xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/35 p-4 backdrop-blur-sm">
+      <div className="neo-card max-h-[90vh] w-full max-w-3xl overflow-y-auto">
+        <div className="sticky top-0 flex items-center justify-between border-b border-slate-200/70 bg-slate-50/95 px-5 py-4 backdrop-blur">
           <h2 className="text-lg font-semibold text-slate-950">{title}</h2>
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100"
+            className="neo-button neo-button-ghost flex h-9 w-9 items-center justify-center text-slate-500"
             aria-label="Tutup"
             title="Tutup"
           >

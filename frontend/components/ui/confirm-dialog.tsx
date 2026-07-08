@@ -16,10 +16,10 @@ export function ConfirmDialog({
   onConfirm: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 p-4 backdrop-blur-sm">
+      <div className="neo-card w-full max-w-md p-6">
         <div className="flex gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
+          <div className="neo-card-soft flex h-11 w-11 shrink-0 items-center justify-center text-red-600">
             <AlertTriangle className="h-5 w-5" aria-hidden="true" />
           </div>
           <div>

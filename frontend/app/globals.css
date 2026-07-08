@@ -1,8 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #111827;
+  --background: #f3f6fb;
+  --foreground: #0f172a;
+  --neo-bg: #f3f6fb;
+  --neo-surface: #f8fafc;
+  --neo-surface-strong: #ffffff;
+  --neo-dark: #0f172a;
+  --neo-dark-soft: #111827;
+  --neo-text: #0f172a;
+  --neo-muted: #64748b;
+  --neo-orange: #f97316;
+  --neo-amber: #f59e0b;
+  --neo-soft-border: #e2e8f0;
+  --neo-raised: 6px 6px 14px rgba(15, 23, 42, 0.06), -6px -6px 14px rgba(255, 255, 255, 0.7);
+  --neo-raised-sm: 4px 4px 10px rgba(15, 23, 42, 0.05), -4px -4px 10px rgba(255, 255, 255, 0.75);
+  --neo-raised-control: 3px 3px 8px rgba(15, 23, 42, 0.05), -3px -3px 8px rgba(255, 255, 255, 0.7);
+  --neo-raised-orange: 3px 3px 8px rgba(249, 115, 22, 0.14), -3px -3px 8px rgba(255, 255, 255, 0.6);
+  --neo-raised-dark: 4px 4px 10px rgba(0, 0, 0, 0.16), -2px -2px 8px rgba(255, 255, 255, 0.03);
+  --neo-inset: inset 2px 2px 6px rgba(15, 23, 42, 0.05), inset -2px -2px 6px rgba(255, 255, 255, 0.8);
 }
 
 @theme inline {
@@ -31,4 +47,201 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+::selection {
+  background: rgba(249, 115, 22, 0.18);
+}
+
+textarea {
+  background: #ffffff;
+  box-shadow: var(--neo-inset);
+  border: 1px solid var(--neo-soft-border);
+}
+
+.neo-page {
+  background:
+    radial-gradient(circle at top left, rgba(249, 115, 22, 0.045), transparent 28%),
+    linear-gradient(135deg, #f3f6fb 0%, #f8fafc 54%, #eef3f9 100%);
+  color: var(--neo-text);
+}
+
+.neo-card {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border: 1px solid var(--neo-soft-border);
+  border-radius: 20px;
+  box-shadow: var(--neo-raised);
+}
+
+.neo-card-soft {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border: 1px solid var(--neo-soft-border);
+  border-radius: 16px;
+  box-shadow: var(--neo-raised-sm);
+}
+
+.neo-card-dark {
+  background: linear-gradient(145deg, #111827, #0f172a);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: var(--neo-raised-dark);
+  color: #f8fafc;
+}
+
+.neo-inset {
+  background: #ffffff;
+  border: 1px solid var(--neo-soft-border);
+  border-radius: 14px;
+  box-shadow: var(--neo-inset);
+}
+
+.neo-pressed {
+  background: #eef3f9;
+  box-shadow: var(--neo-inset);
+}
+
+.neo-button {
+  border: 1px solid var(--neo-soft-border);
+  border-radius: 12px;
+  box-shadow: var(--neo-raised-control);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.neo-button:hover {
+  transform: translateY(-1px);
+}
+
+.neo-button:active {
+  transform: translateY(0);
+  box-shadow: var(--neo-inset);
+}
+
+.neo-button-primary {
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+  box-shadow: var(--neo-raised-orange);
+  color: white;
+}
+
+.neo-button-danger {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  color: white;
+}
+
+.neo-button-ghost {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  color: #334155;
+}
+
+.neo-input,
+.neo-select {
+  background: #ffffff;
+  border: 1px solid var(--neo-soft-border);
+  border-radius: 12px;
+  box-shadow: var(--neo-inset);
+}
+
+.neo-input:focus,
+.neo-select:focus,
+textarea:focus {
+  border-color: rgba(249, 115, 22, 0.55);
+  outline: none;
+  box-shadow: var(--neo-inset), 0 0 0 4px rgba(249, 115, 22, 0.12);
+}
+
+.neo-table {
+  background: #ffffff;
+  border: 1px solid var(--neo-soft-border);
+  border-radius: 16px;
+  box-shadow: var(--neo-raised-sm);
+}
+
+.neo-badge {
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: none;
+}
+
+.neo-sidebar {
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--neo-raised-dark);
+}
+
+.neo-active {
+  background: rgba(249, 115, 22, 0.12);
+  border: 1px solid rgba(249, 115, 22, 0.22);
+  color: #fed7aa;
+  box-shadow: none;
+}
+
+.neo-icon-accent {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #f97316;
+  box-shadow: var(--neo-raised-control);
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  body {
+    background: white !important;
+  }
+
+  .screen-only,
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-area {
+    display: block !important;
+    background: white !important;
+    color: #111827 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .neo-card,
+  .neo-card-soft,
+  .neo-inset,
+  .neo-button,
+  .neo-button-primary,
+  .neo-button-danger,
+  .neo-button-ghost,
+  .neo-card-dark,
+  .neo-input,
+  .neo-select,
+  .neo-table,
+  .print-area {
+    box-shadow: none !important;
+    background: white !important;
+  }
+
+  .print-area table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    font-size: 10px !important;
+  }
+
+  .print-area th,
+  .print-area td {
+    border: 1px solid #cbd5e1 !important;
+    padding: 6px !important;
+  }
+
+  .print-area th {
+    background: #f1f5f9 !important;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 12mm;
+  }
 }

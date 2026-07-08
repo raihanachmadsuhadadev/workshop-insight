@@ -10,7 +10,7 @@ export function Card({
   className?: string;
 }) {
   return (
-    <section className={cn("rounded-xl border border-slate-200 bg-white p-5 shadow-sm", className)}>
+    <section className={cn("neo-card p-5", className)}>
       {children}
     </section>
   );
@@ -25,8 +25,8 @@ export function CardTitle({
 }) {
   return (
     <div className="mb-4">
-      <h2 className="text-base font-semibold text-slate-950">{title}</h2>
-      {description ? <p className="mt-1 text-sm text-slate-500">{description}</p> : null}
+      <h2 className="text-base font-bold text-slate-950">{title}</h2>
+      {description ? <p className="mt-1 text-sm leading-6 text-slate-500">{description}</p> : null}
     </div>
   );
 }
