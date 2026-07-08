@@ -169,6 +169,16 @@ class DatabaseSeeder extends Seeder
             ['TRX-20260708-0008', 'CUS-0008', 'MCH-0001', 'B 3381 MS', [['spare_part', 'SP-0002', 1], ['service', 'SRV-0001', 1]]],
             ['TRX-20260708-0009', 'CUS-0009', 'MCH-0002', 'B 8120 IR', [['spare_part', 'SP-0009', 1], ['service', 'SRV-0008', 1]]],
             ['TRX-20260708-0010', 'CUS-0010', 'MCH-0003', 'B 7012 PW', [['spare_part', 'SP-0007', 1], ['service', 'SRV-0007', 1]]],
+            ['TRX-20260708-0011', 'CUS-0001', 'MCH-0001', 'B 1234 RZ', [['spare_part', 'SP-0001', 1], ['service', 'SRV-0003', 1]]],
+            ['TRX-20260708-0012', 'CUS-0002', 'MCH-0001', 'B 2211 DL', [['spare_part', 'SP-0001', 1], ['service', 'SRV-0003', 1], ['service', 'SRV-0001', 1]]],
+            ['TRX-20260708-0013', 'CUS-0003', 'MCH-0002', 'B 9032 AS', [['spare_part', 'SP-0004', 1], ['spare_part', 'SP-0005', 1], ['service', 'SRV-0005', 1]]],
+            ['TRX-20260708-0014', 'CUS-0004', 'MCH-0003', 'B 4810 NP', [['spare_part', 'SP-0006', 1], ['spare_part', 'SP-0007', 1], ['service', 'SRV-0007', 1]]],
+            ['TRX-20260708-0015', 'CUS-0005', 'MCH-0001', 'B 7788 BN', [['spare_part', 'SP-0003', 1], ['service', 'SRV-0004', 1]]],
+            ['TRX-20260708-0016', 'CUS-0006', 'MCH-0001', 'B 6754 SA', [['spare_part', 'SP-0011', 1], ['service', 'SRV-0006', 1]]],
+            ['TRX-20260708-0017', 'CUS-0007', 'MCH-0001', 'B 9912 FH', [['spare_part', 'SP-0008', 1], ['service', 'SRV-0002', 1]]],
+            ['TRX-20260708-0018', 'CUS-0008', 'MCH-0001', 'B 3381 MS', [['spare_part', 'SP-0001', 1], ['spare_part', 'SP-0002', 1], ['service', 'SRV-0003', 1]]],
+            ['TRX-20260708-0019', 'CUS-0009', 'MCH-0002', 'B 8120 IR', [['spare_part', 'SP-0009', 1], ['service', 'SRV-0008', 1]]],
+            ['TRX-20260708-0020', 'CUS-0010', 'MCH-0003', 'B 7012 PW', [['spare_part', 'SP-0006', 1], ['service', 'SRV-0007', 1]]],
         ];
 
         foreach ($transactionCombos as [$code, $customerCode, $mechanicCode, $plateNumber, $items]) {
