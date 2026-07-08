@@ -8,6 +8,8 @@ use App\Models\ItemCategory;
 use App\Models\Mechanic;
 use App\Models\ServiceItem;
 use App\Models\SparePart;
+use App\Models\StockMovement;
+use App\Models\Transaction;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +23,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate([
+        $admin = User::updateOrCreate([
             'email' => 'admin@starmotor.test',
         ], [
             'name' => 'Admin Star Motor',
@@ -154,6 +156,108 @@ class DatabaseSeeder extends Seeder
                 'specialization' => $specialization,
                 'is_active' => true,
             ]);
+        }
+
+        $transactionCombos = [
+            ['TRX-20260708-0001', 'CUS-0001', 'MCH-0001', 'B 1234 RZ', [['spare_part', 'SP-0001', 1], ['service', 'SRV-0003', 1]]],
+            ['TRX-20260708-0002', 'CUS-0002', 'MCH-0001', 'B 2211 DL', [['spare_part', 'SP-0001', 1], ['spare_part', 'SP-0003', 1], ['service', 'SRV-0001', 1]]],
+            ['TRX-20260708-0003', 'CUS-0003', 'MCH-0002', 'B 9032 AS', [['spare_part', 'SP-0004', 1], ['service', 'SRV-0005', 1]]],
+            ['TRX-20260708-0004', 'CUS-0004', 'MCH-0003', 'B 4810 NP', [['spare_part', 'SP-0006', 1], ['service', 'SRV-0007', 1]]],
+            ['TRX-20260708-0005', 'CUS-0005', 'MCH-0001', 'B 7788 BN', [['spare_part', 'SP-0003', 1], ['service', 'SRV-0004', 1]]],
+            ['TRX-20260708-0006', 'CUS-0006', 'MCH-0001', 'B 6754 SA', [['spare_part', 'SP-0011', 1], ['service', 'SRV-0006', 1]]],
+            ['TRX-20260708-0007', 'CUS-0007', 'MCH-0001', 'B 9912 FH', [['spare_part', 'SP-0008', 1], ['service', 'SRV-0002', 1]]],
+            ['TRX-20260708-0008', 'CUS-0008', 'MCH-0001', 'B 3381 MS', [['spare_part', 'SP-0002', 1], ['service', 'SRV-0001', 1]]],
+            ['TRX-20260708-0009', 'CUS-0009', 'MCH-0002', 'B 8120 IR', [['spare_part', 'SP-0009', 1], ['service', 'SRV-0008', 1]]],
+            ['TRX-20260708-0010', 'CUS-0010', 'MCH-0003', 'B 7012 PW', [['spare_part', 'SP-0007', 1], ['service', 'SRV-0007', 1]]],
+        ];
+
+        foreach ($transactionCombos as [$code, $customerCode, $mechanicCode, $plateNumber, $items]) {
+            if (Transaction::where('code', $code)->exists()) {
+                continue;
+            }
+
+            $customer = Customer::where('code', $customerCode)->first();
+            $mechanic = Mechanic::where('code', $mechanicCode)->first();
+            $subtotalSpareParts = 0;
+            $subtotalServices = 0;
+            $preparedItems = [];
+
+            foreach ($items as [$type, $itemCode, $quantity]) {
+                if ($type === 'spare_part') {
+                    $sparePart = SparePart::where('code', $itemCode)->first();
+                    $unitPrice = (float) $sparePart->selling_price;
+                    $subtotal = $unitPrice * $quantity;
+                    $subtotalSpareParts += $subtotal;
+                    $preparedItems[] = [
+                        'model' => $sparePart,
+                        'item_type' => 'spare_part',
+                        'item_id' => $sparePart->id,
+                        'item_code' => $sparePart->code,
+                        'item_name' => $sparePart->name,
+                        'quantity' => $quantity,
+                        'unit_price' => $unitPrice,
+                        'subtotal' => $subtotal,
+                    ];
+
+                    continue;
+                }
+
+                $service = ServiceItem::where('code', $itemCode)->first();
+                $unitPrice = (float) $service->service_price;
+                $subtotal = $unitPrice * $quantity;
+                $subtotalServices += $subtotal;
+                $preparedItems[] = [
+                    'item_type' => 'service',
+                    'item_id' => $service->id,
+                    'item_code' => $service->code,
+                    'item_name' => $service->name,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'subtotal' => $subtotal,
+                ];
+            }
+
+            $transaction = Transaction::create([
+                'code' => $code,
+                'transaction_date' => now()->subDays(rand(0, 6)),
+                'customer_id' => $customer?->id,
+                'mechanic_id' => $mechanic?->id,
+                'cashier_id' => $admin->id,
+                'vehicle_plate_number' => $plateNumber,
+                'vehicle_description' => trim(($customer?->vehicle_brand ?? '').' '.($customer?->vehicle_type ?? '')),
+                'subtotal_spare_parts' => $subtotalSpareParts,
+                'subtotal_services' => $subtotalServices,
+                'discount_amount' => 0,
+                'total_amount' => $subtotalSpareParts + $subtotalServices,
+                'payment_method' => 'cash',
+                'payment_status' => 'paid',
+                'status' => 'completed',
+                'notes' => 'Transaksi contoh untuk data awal Apriori.',
+            ]);
+
+            foreach ($preparedItems as $preparedItem) {
+                $sparePart = $preparedItem['model'] ?? null;
+                unset($preparedItem['model']);
+                $transaction->items()->create($preparedItem);
+
+                if ($sparePart instanceof SparePart) {
+                    $stockBefore = $sparePart->current_stock;
+                    $stockAfter = $stockBefore - $preparedItem['quantity'];
+                    $sparePart->update(['current_stock' => $stockAfter]);
+
+                    StockMovement::create([
+                        'spare_part_id' => $sparePart->id,
+                        'transaction_id' => $transaction->id,
+                        'movement_type' => 'out',
+                        'quantity' => $preparedItem['quantity'],
+                        'stock_before' => $stockBefore,
+                        'stock_after' => $stockAfter,
+                        'reference_code' => $transaction->code,
+                        'description' => 'Pengurangan stok dari seed transaksi '.$transaction->code,
+                        'created_by' => $admin->id,
+                    ]);
+                }
+            }
         }
     }
 }

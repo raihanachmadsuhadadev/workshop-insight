@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Admin\ItemCategoryController;
 use App\Http\Controllers\Api\Admin\MechanicController;
 use App\Http\Controllers\Api\Admin\ServiceItemController;
 use App\Http\Controllers\Api\Admin\SparePartController;
+use App\Http\Controllers\Api\Admin\StockMovementController;
+use App\Http\Controllers\Api\Admin\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -32,6 +34,11 @@ Route::middleware('auth:sanctum')->group(function (): void {
         ]);
         Route::apiResource('customers', CustomerController::class);
         Route::apiResource('mechanics', MechanicController::class);
+        Route::get('transactions', [TransactionController::class, 'index']);
+        Route::post('transactions', [TransactionController::class, 'store']);
+        Route::get('transactions/{transaction}', [TransactionController::class, 'show']);
+        Route::post('transactions/{transaction}/cancel', [TransactionController::class, 'cancel']);
+        Route::get('stock-movements', [StockMovementController::class, 'index']);
     });
 
     Route::middleware('role:owner')->get('/owner/dashboard-summary', function () {
