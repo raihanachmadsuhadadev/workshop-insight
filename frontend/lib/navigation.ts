@@ -1,6 +1,7 @@
 import {
   BarChart3,
   Boxes,
+  FolderKanban,
   ClipboardList,
   FileBarChart,
   Gauge,
@@ -16,6 +17,7 @@ import {
 export const adminNavigation = [
   { label: "Dashboard", href: "/admin/dashboard", icon: Gauge },
   { label: "Transaksi", href: "/admin/transactions", icon: ReceiptText },
+  { label: "Kategori Item", href: "/admin/item-categories", icon: FolderKanban },
   { label: "Suku Cadang", href: "/admin/spare-parts", icon: Boxes },
   { label: "Layanan Servis", href: "/admin/services", icon: Wrench },
   { label: "Pelanggan", href: "/admin/customers", icon: UsersRound },
