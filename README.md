@@ -196,15 +196,3 @@ npm run build
 python app.py
 ```
 
-## Future Improvements
-
-- Export laporan PDF dan Excel.
-- Advanced dashboard analytics.
-- Dukungan bengkel multi-cabang.
-- Manajemen campaign paket layanan.
-- Integrasi notifikasi.
-- Filter transaksi yang lebih fleksibel untuk analisis.
-
-## Project Status
-
-**Completed / Portfolio Ready**
