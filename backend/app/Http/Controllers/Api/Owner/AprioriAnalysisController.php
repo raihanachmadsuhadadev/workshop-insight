@@ -28,7 +28,7 @@ class AprioriAnalysisController extends Controller
             ->when($request->filled('end_date'), fn ($query) => $query->whereDate('ran_at', '<=', $request->date('end_date')))
             ->get();
 
-        return $this->success('Data hasil analisis Apriori berhasil dimuat', $runs);
+        return $this->success('Data hasil analisis pola berhasil dimuat', $runs);
     }
 
     public function store(Request $request, AprioriAnalysisService $service): JsonResponse
@@ -44,13 +44,13 @@ class AprioriAnalysisController extends Controller
 
         $run = $service->run($payload, $request->user()->id);
 
-        return $this->success('Analisis Apriori berhasil dijalankan', $run, 201);
+        return $this->success('Analisis pola transaksi berhasil dijalankan', $run, 201);
     }
 
     public function show(AprioriRun $aprioriRun): JsonResponse
     {
         return $this->success(
-            'Detail hasil analisis Apriori berhasil dimuat',
+            'Detail hasil analisis pola berhasil dimuat',
             $aprioriRun->load(['runBy', 'frequentItemsets', 'rules'])
         );
     }
@@ -59,7 +59,7 @@ class AprioriAnalysisController extends Controller
     {
         $aprioriRun->delete();
 
-        return $this->success('Hasil analisis Apriori berhasil dihapus', null);
+        return $this->success('Hasil analisis pola berhasil dihapus', null);
     }
 
     public function recommendations(Request $request): JsonResponse

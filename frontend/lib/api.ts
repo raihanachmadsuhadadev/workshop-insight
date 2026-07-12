@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const TOKEN_KEY = "star_motor_token";
-export const USER_KEY = "star_motor_user";
+export const TOKEN_KEY = "workshop_insight_token";
+export const USER_KEY = "workshop_insight_user";
 
 export type UserRole = "admin" | "owner";
 

@@ -15,28 +15,47 @@ import { runAprioriAnalysis } from "@/lib/services/apriori";
 
 function getErrorMessage(error: unknown) {
   if (error instanceof AxiosError) {
+    const eligibleCount = error.response?.data?.data?.eligible_transactions_count;
+    if (typeof eligibleCount === "number") {
+      return `Transaksi selesai pada periode ini belum mencukupi. Ditemukan ${eligibleCount} transaksi selesai, minimal diperlukan 3 transaksi.`;
+    }
     const errors = error.response?.data?.errors;
     if (errors && typeof errors === "object") {
       const first = Object.values(errors)[0];
       if (Array.isArray(first) && first[0]) return String(first[0]);
     }
-    return error.response?.data?.message ?? "Gagal menjalankan analisis Apriori.";
+    return error.response?.data?.message ?? "Gagal menjalankan analisis pola transaksi.";
   }
-  return "Gagal menjalankan analisis Apriori.";
+  return "Gagal menjalankan analisis pola transaksi.";
+}
+
+function formatDateInput(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function defaultDateRange() {
+  const endDate = new Date();
+  const startDate = new Date(endDate);
+  startDate.setDate(startDate.getDate() - 30);
+
+  return { start_date: formatDateInput(startDate), end_date: formatDateInput(endDate) };
 }
 
 export default function OwnerAprioriPage() {
   const router = useRouter();
   const [toast, setToast] = useState<ToastState>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [form, setForm] = useState({
-    name: "Analisis Apriori Star Motor",
-    start_date: "",
-    end_date: "",
+  const [form, setForm] = useState(() => ({
+    name: "Analisis Pola Transaksi Workshop",
+    ...defaultDateRange(),
     item_scope: "all",
     minimum_support: "0.2",
     minimum_confidence: "0.5",
-  });
+  }));
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,7 +69,7 @@ export default function OwnerAprioriPage() {
         minimum_support: Number(form.minimum_support),
         minimum_confidence: Number(form.minimum_confidence),
       });
-      setToast({ type: "success", message: "Analisis Apriori berhasil dijalankan." });
+      setToast({ type: "success", message: "Analisis pola transaksi berhasil dijalankan." });
       router.replace(`/owner/apriori-results/${run.id}`);
     } catch (error) {
       setToast({ type: "error", message: getErrorMessage(error) });
@@ -61,16 +80,17 @@ export default function OwnerAprioriPage() {
 
   return (
     <DashboardLayout
-      title="Analisis Apriori"
-      description="Jalankan association rule mining dari transaksi bengkel yang sudah selesai."
+      title="Analisis Pola Transaksi"
+      description="Temukan kombinasi item dari transaksi bengkel yang sudah selesai."
       role="Owner"
       userName="Owner Bengkel"
-      eyebrow="Apriori"
+      eyebrow="Analisis Pola"
     >
       <Toast toast={toast} />
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
         <Card>
           <CardTitle title="Parameter Analisis" description="Atur periode, scope item, dan minimum metric." />
+          <p className="mb-4 text-sm text-slate-500">Analisis hanya menggunakan transaksi dengan status selesai.</p>
           <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
             <label className="md:col-span-2">
               <span className="mb-2 block text-sm font-semibold text-slate-700">Nama Analisis</span>

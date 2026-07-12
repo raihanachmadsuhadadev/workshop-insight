@@ -42,21 +42,21 @@ export default function LoginPage() {
             <span className="neo-button neo-button-primary flex h-11 w-11 items-center justify-center">
               <Wrench className="h-5 w-5" aria-hidden="true" />
             </span>
-            <span className="text-lg font-bold">Star Motor Insight</span>
+            <span className="text-lg font-bold">Workshop Insight</span>
           </Link>
         </div>
 
         <div className="relative my-12 max-w-2xl">
           <Badge tone="orange">Dashboard Bengkel</Badge>
           <h1 className="mt-5 text-4xl font-bold leading-tight md:text-5xl">
-            Masuk ke sistem transaksi dan analisis Star Motor.
+            Masuk ke sistem transaksi dan analisis bengkel.
           </h1>
           <p className="mt-5 text-base leading-8 text-slate-300">
             Masuk untuk mengelola transaksi, stok, laporan, dan analisis bengkel.
           </p>
         </div>
 
-        <p className="relative text-sm text-slate-400">(c) 2026 Star Motor Insight</p>
+        <p className="relative text-sm text-slate-400">© 2026 Workshop Insight</p>
       </section>
 
       <section className="neo-page flex items-center justify-center px-4 py-10 text-slate-900">

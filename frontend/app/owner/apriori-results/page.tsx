@@ -89,7 +89,7 @@ export default function AprioriResultsPage() {
   ]);
 
   return (
-    <DashboardLayout title="Hasil Analisis Apriori" description="Daftar histori analisis Apriori yang pernah dijalankan." role="Owner" userName="Owner Bengkel" eyebrow="Hasil Analisis">
+    <DashboardLayout title="Hasil Analisis Pola Transaksi" description="Daftar riwayat analisis pola yang pernah dijalankan." role="Owner" userName="Owner Bengkel" eyebrow="Hasil Analisis">
       <Toast toast={toast} />
       <Card>
         <label>
@@ -101,7 +101,7 @@ export default function AprioriResultsPage() {
         {isLoading ? (
           <LoadingState />
         ) : runs.length === 0 ? (
-          <EmptyState title="Belum ada hasil analisis" description="Jalankan analisis Apriori untuk melihat hasil di sini." icon={Eye} />
+          <EmptyState title="Belum ada hasil analisis" description="Jalankan analisis pola untuk melihat hasil di sini." icon={Eye} />
         ) : (
           <Card>
             <CardTitle title="Daftar Hasil Analisis" description={`${runs.length} run ditemukan.`} />

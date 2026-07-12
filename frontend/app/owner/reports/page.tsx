@@ -70,7 +70,7 @@ export default function OwnerReportsPage() {
           <Button type="button" variant="secondary" onClick={() => window.print()}><Printer className="h-4 w-4" aria-hidden="true" />Print</Button>
         </div>
         <div className="print-only mb-4">
-          <h1 className="text-xl font-bold">Star Motor Insight</h1>
+          <h1 className="text-xl font-bold">Workshop Insight</h1>
           <p className="font-semibold">Laporan Transaksi Bengkel</p>
           <p className="text-sm">Tanggal cetak: {formatDateTime(new Date().toISOString())}</p>
         </div>

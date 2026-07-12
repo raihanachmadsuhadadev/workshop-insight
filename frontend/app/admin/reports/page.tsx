@@ -196,7 +196,7 @@ export default function AdminReportsPage() {
 function PrintHeader({ title }: { title: string }) {
   return (
     <div className="print-only mb-4">
-      <h1 className="text-xl font-bold">Star Motor Insight</h1>
+      <h1 className="text-xl font-bold">Workshop Insight</h1>
       <p className="font-semibold">{title}</p>
       <p className="text-sm">Tanggal cetak: {formatDateTime(new Date().toISOString())}</p>
     </div>

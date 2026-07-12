@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         $user->tokens()->delete();
 
-        $token = $user->createToken('star-motor-api-token')->plainTextToken;
+        $token = $user->createToken('workshop-insight-api-token')->plainTextToken;
 
         return response()->json([
             'success' => true,

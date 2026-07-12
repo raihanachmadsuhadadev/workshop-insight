@@ -57,7 +57,7 @@ export default function OwnerRecommendationsPage() {
   return (
     <DashboardLayout
       title="Rekomendasi Paket"
-      description="Rekomendasi paket servis berdasarkan association rules Apriori."
+      description="Rekomendasi paket servis berdasarkan pola kombinasi transaksi."
       role="Owner"
       userName="Owner Bengkel"
       eyebrow="Rekomendasi"
@@ -79,7 +79,7 @@ export default function OwnerRecommendationsPage() {
         {isLoading ? (
           <LoadingState />
         ) : recommendations.length === 0 ? (
-          <EmptyState title="Belum ada rekomendasi" description="Jalankan analisis Apriori atau turunkan parameter minimum support/confidence." icon={Sparkles} />
+          <EmptyState title="Belum ada rekomendasi" description="Jalankan analisis pola atau turunkan parameter minimum support/confidence." icon={Sparkles} />
         ) : (
           <Card>
             <CardTitle title="Daftar Rekomendasi Paket" description={`${recommendations.length} rekomendasi ditemukan.`} />

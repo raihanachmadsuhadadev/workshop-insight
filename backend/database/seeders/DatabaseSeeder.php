@@ -10,6 +10,7 @@ use App\Models\ServiceItem;
 use App\Models\SparePart;
 use App\Models\StockMovement;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -24,9 +25,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $admin = User::updateOrCreate([
-            'email' => 'admin@starmotor.test',
+            'email' => 'admin@workshop.test',
         ], [
-            'name' => 'Admin Star Motor',
+            'name' => 'Admin Workshop',
             'password' => Hash::make('password'),
             'role' => 'admin',
             'phone' => '081111111111',
@@ -34,9 +35,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::updateOrCreate([
-            'email' => 'owner@starmotor.test',
+            'email' => 'owner@workshop.test',
         ], [
-            'name' => 'Owner Star Motor',
+            'name' => 'Owner Workshop',
             'password' => Hash::make('password'),
             'role' => 'owner',
             'phone' => '082222222222',
@@ -112,7 +113,7 @@ class DatabaseSeeder extends Seeder
                 'name' => $name,
                 'service_price' => $price,
                 'estimated_duration' => $duration,
-                'description' => 'Layanan '.$name.' bengkel Star Motor.',
+                'description' => 'Layanan '.$name.' untuk kebutuhan bengkel.',
                 'is_active' => true,
             ]);
         }
@@ -138,7 +139,7 @@ class DatabaseSeeder extends Seeder
                 'vehicle_brand' => $vehicleBrand,
                 'vehicle_type' => $vehicleType,
                 'vehicle_plate_number' => $plateNumber,
-                'notes' => 'Pelanggan bengkel Star Motor.',
+                'notes' => 'Pelanggan bengkel Workshop.',
                 'is_active' => true,
             ]);
         }
@@ -159,11 +160,11 @@ class DatabaseSeeder extends Seeder
         }
 
         $transactionCombos = [
-            ['TRX-20260708-0001', 'CUS-0001', 'MCH-0001', 'B 1234 RZ', [['spare_part', 'SP-0001', 1], ['service', 'SRV-0003', 1]]],
-            ['TRX-20260708-0002', 'CUS-0002', 'MCH-0001', 'B 2211 DL', [['spare_part', 'SP-0001', 1], ['spare_part', 'SP-0003', 1], ['service', 'SRV-0001', 1]]],
-            ['TRX-20260708-0003', 'CUS-0003', 'MCH-0002', 'B 9032 AS', [['spare_part', 'SP-0004', 1], ['service', 'SRV-0005', 1]]],
-            ['TRX-20260708-0004', 'CUS-0004', 'MCH-0003', 'B 4810 NP', [['spare_part', 'SP-0006', 1], ['service', 'SRV-0007', 1]]],
-            ['TRX-20260708-0005', 'CUS-0005', 'MCH-0001', 'B 7788 BN', [['spare_part', 'SP-0003', 1], ['service', 'SRV-0004', 1]]],
+            ['TRX-20260713-0001', 'CUS-0001', 'MCH-0001', 'B 1234 RZ', [['spare_part', 'SP-0001', 1], ['service', 'SRV-0003', 1]]],
+            ['TRX-20260713-0002', 'CUS-0002', 'MCH-0001', 'B 2211 DL', [['spare_part', 'SP-0001', 1], ['spare_part', 'SP-0003', 1], ['service', 'SRV-0003', 1]]],
+            ['TRX-20260713-0003', 'CUS-0003', 'MCH-0002', 'B 9032 AS', [['spare_part', 'SP-0004', 1], ['service', 'SRV-0005', 1]]],
+            ['TRX-20260713-0004', 'CUS-0004', 'MCH-0003', 'B 4810 NP', [['spare_part', 'SP-0001', 1], ['spare_part', 'SP-0003', 1], ['service', 'SRV-0003', 1]]],
+            ['TRX-20260713-0005', 'CUS-0005', 'MCH-0001', 'B 7788 BN', [['spare_part', 'SP-0001', 1], ['service', 'SRV-0003', 1]]],
             ['TRX-20260708-0006', 'CUS-0006', 'MCH-0001', 'B 6754 SA', [['spare_part', 'SP-0011', 1], ['service', 'SRV-0006', 1]]],
             ['TRX-20260708-0007', 'CUS-0007', 'MCH-0001', 'B 9912 FH', [['spare_part', 'SP-0008', 1], ['service', 'SRV-0002', 1]]],
             ['TRX-20260708-0008', 'CUS-0008', 'MCH-0001', 'B 3381 MS', [['spare_part', 'SP-0002', 1], ['service', 'SRV-0001', 1]]],
@@ -181,7 +182,7 @@ class DatabaseSeeder extends Seeder
             ['TRX-20260708-0020', 'CUS-0010', 'MCH-0003', 'B 7012 PW', [['spare_part', 'SP-0006', 1], ['service', 'SRV-0007', 1]]],
         ];
 
-        foreach ($transactionCombos as [$code, $customerCode, $mechanicCode, $plateNumber, $items]) {
+        foreach ($transactionCombos as $index => [$code, $customerCode, $mechanicCode, $plateNumber, $items]) {
             if (Transaction::where('code', $code)->exists()) {
                 continue;
             }
@@ -229,7 +230,9 @@ class DatabaseSeeder extends Seeder
 
             $transaction = Transaction::create([
                 'code' => $code,
-                'transaction_date' => now()->subDays(rand(0, 6)),
+                'transaction_date' => $index < 5
+                    ? Carbon::create(2026, 7, 13, 10 + $index)
+                    : Carbon::create(2026, 7, 12, 10)->subDays(($index - 5) % 6),
                 'customer_id' => $customer?->id,
                 'mechanic_id' => $mechanic?->id,
                 'cashier_id' => $admin->id,
@@ -242,7 +245,7 @@ class DatabaseSeeder extends Seeder
                 'payment_method' => 'cash',
                 'payment_status' => 'paid',
                 'status' => 'completed',
-                'notes' => 'Transaksi contoh untuk data awal Apriori.',
+                'notes' => 'Transaksi contoh untuk data awal analisis pola.',
             ]);
 
             foreach ($preparedItems as $preparedItem) {

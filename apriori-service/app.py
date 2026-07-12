@@ -64,8 +64,8 @@ def build_recommendation(rule):
 def index():
     return jsonify({
         "success": True,
-        "service": "Star Motor Apriori Service",
-        "message": "Apriori service is running",
+        "service": "Workshop Insight Pattern Analysis Service",
+        "message": "Pattern analysis service is running",
         "port": 5002,
     })
 
@@ -84,7 +84,7 @@ def analyze():
         return jsonify({"success": False, "message": "minimum_confidence harus berada pada range 0.01 - 1."}), 422
 
     if len(transactions) < 3:
-        return jsonify({"success": False, "message": "Minimal 3 transaksi diperlukan untuk analisis Apriori."}), 422
+        return jsonify({"success": False, "message": "Minimal 3 transaksi diperlukan untuk analisis pola."}), 422
 
     item_lists = [transaction["items"] for transaction in transactions]
     unique_items = sorted({item for items in item_lists for item in items})
@@ -143,7 +143,7 @@ def analyze():
                 })
 
     recommendations = [build_recommendation(rule) for rule in rules[:10]]
-    message = "Apriori analysis completed" if rules else "Analisis selesai, tetapi belum ada aturan asosiasi yang memenuhi parameter."
+    message = "Analisis pola transaksi selesai" if rules else "Analisis selesai, tetapi belum ada aturan kombinasi yang memenuhi parameter."
 
     return jsonify({
         "success": True,

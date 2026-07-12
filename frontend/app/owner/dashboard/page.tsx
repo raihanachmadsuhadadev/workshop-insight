@@ -46,12 +46,12 @@ export default function OwnerDashboardPage() {
             <StatCard title="Total Transaksi" value={String(data.summary.total_transactions)} trend="Semua status" icon={ClipboardList} />
             <StatCard title="Total Pendapatan" value={formatRupiah(data.summary.total_revenue)} trend="Completed only" icon={CircleDollarSign} tone="green" />
             <StatCard title="Total Pelanggan" value={String(data.summary.total_customers)} trend={`${data.summary.total_spare_parts} suku cadang`} icon={UsersRound} tone="blue" />
-            <StatCard title="Analisis Apriori" value={String(data.summary.total_apriori_runs)} trend={`${data.summary.low_stock_count} stok kritis`} icon={BarChart3} />
+            <StatCard title="Analisis Pola" value={String(data.summary.total_apriori_runs)} trend={`${data.summary.low_stock_count} stok kritis`} icon={BarChart3} />
           </div>
 
           <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
             <Card>
-              <CardTitle title="Latest Apriori Run" description="Hasil analisis terbaru yang sudah completed." />
+              <CardTitle title="Analisis Pola Terbaru" description="Hasil analisis terbaru yang sudah selesai." />
               {data.latest_apriori_run ? (
                 <div className="grid gap-3 text-sm md:grid-cols-2">
                   <Info label="Kode" value={data.latest_apriori_run.code} />
@@ -61,7 +61,7 @@ export default function OwnerDashboardPage() {
                   <Info label="Total Rules" value={String(data.latest_apriori_run.total_rules)} />
                   <Info label="Periode" value={data.latest_apriori_run.start_date || data.latest_apriori_run.end_date ? `${data.latest_apriori_run.start_date ?? "..."} - ${data.latest_apriori_run.end_date ?? "..."}` : "Semua periode"} />
                 </div>
-              ) : <p className="text-sm text-slate-500">Belum ada run Apriori.</p>}
+              ) : <p className="text-sm text-slate-500">Belum ada analisis pola.</p>}
             </Card>
 
             <Card>

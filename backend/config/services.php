@@ -35,8 +35,8 @@ return [
         ],
     ],
 
-    'apriori' => [
-        'url' => env('APRIORI_SERVICE_URL', 'http://127.0.0.1:5002'),
+    'pattern_analysis' => [
+        'url' => env('PATTERN_ANALYSIS_SERVICE_URL', 'http://127.0.0.1:5002'),
     ],
 
 ];

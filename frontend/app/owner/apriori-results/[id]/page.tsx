@@ -57,7 +57,7 @@ export default function AprioriResultDetailPage() {
 
   if (isLoading || !run) {
     return (
-      <DashboardLayout title="Detail Hasil Analisis" description="Memuat hasil Apriori." role="Owner" userName="Owner Bengkel" eyebrow="Hasil Analisis">
+      <DashboardLayout title="Detail Hasil Analisis" description="Memuat hasil analisis pola transaksi." role="Owner" userName="Owner Bengkel" eyebrow="Hasil Analisis">
         <Toast toast={toast} />
         <LoadingState />
       </DashboardLayout>
@@ -110,8 +110,8 @@ export default function AprioriResultDetailPage() {
       <div className="grid gap-4 md:grid-cols-4">
         <StatCard title="Total Transaksi" value={String(run.total_transactions)} icon={FileText} />
         <StatCard title="Unique Items" value={String(run.total_unique_items)} icon={Boxes} tone="blue" />
-        <StatCard title="Frequent Itemsets" value={String(run.total_frequent_itemsets)} icon={BrainCircuit} tone="green" />
-        <StatCard title="Association Rules" value={String(run.total_rules)} icon={BrainCircuit} tone="orange" />
+        <StatCard title="Kombinasi Item Sering Muncul" value={String(run.total_frequent_itemsets)} icon={BrainCircuit} tone="green" />
+        <StatCard title="Aturan Kombinasi" value={String(run.total_rules)} icon={BrainCircuit} tone="orange" />
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
@@ -157,9 +157,9 @@ export default function AprioriResultDetailPage() {
 
       <div className="mt-6 space-y-6">
         <Card>
-          <CardTitle title="Frequent Itemsets" />
+          <CardTitle title="Kombinasi Item Sering Muncul" />
           {itemsets.length === 0 ? (
-            <EmptyState title="Belum ada frequent itemset" description="Coba turunkan minimum support." icon={Boxes} />
+            <EmptyState title="Belum ada kombinasi item" description="Coba turunkan minimum support." icon={Boxes} />
           ) : (
             <>
               <DataTable columns={["No", "Items", "Item Count", "Support", "Support %"]} rows={itemsetRows} />
@@ -178,7 +178,7 @@ export default function AprioriResultDetailPage() {
         </Card>
 
         <Card>
-          <CardTitle title="Association Rules" />
+          <CardTitle title="Aturan Kombinasi" />
           {rules.length === 0 ? (
             <EmptyState title="Belum ada aturan asosiasi" description="Coba turunkan minimum support atau minimum confidence." icon={BrainCircuit} />
           ) : (

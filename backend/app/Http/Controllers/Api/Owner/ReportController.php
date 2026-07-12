@@ -30,7 +30,7 @@ class ReportController extends Controller
         if (! $run) {
             return response()->json([
                 'success' => true,
-                'message' => 'Belum ada hasil analisis Apriori.',
+                'message' => 'Belum ada hasil analisis pola.',
                 'data' => [
                     'selected_run' => null,
                     'summary' => [
@@ -61,7 +61,7 @@ class ReportController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Laporan Apriori berhasil dimuat',
+            'message' => 'Laporan analisis pola berhasil dimuat',
             'data' => [
                 'selected_run' => $run,
                 'summary' => [

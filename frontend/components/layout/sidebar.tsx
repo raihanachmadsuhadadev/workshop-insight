@@ -24,7 +24,7 @@ export function Sidebar({
           </div>
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-300">
-              Star Motor
+              Workshop
             </p>
             <h1 className="text-lg font-bold text-white">Insight</h1>
           </div>

@@ -37,7 +37,7 @@ export default function OwnerAprioriReportPage() {
   const [recommendationItemsPerPage, setRecommendationItemsPerPage] = useState(10);
 
   useEffect(() => {
-    getAprioriRuns().then(setRuns).catch(() => setToast({ type: "error", message: "Gagal memuat daftar run Apriori." }));
+    getAprioriRuns().then(setRuns).catch(() => setToast({ type: "error", message: "Gagal memuat daftar analisis pola." }));
   }, []);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function OwnerAprioriReportPage() {
         setRulePage(1);
         setRecommendationPage(1);
       } catch {
-        setToast({ type: "error", message: "Gagal memuat laporan Apriori." });
+        setToast({ type: "error", message: "Gagal memuat laporan analisis pola." });
       } finally {
         setIsLoading(false);
       }
@@ -85,15 +85,15 @@ export default function OwnerAprioriReportPage() {
   const ruleRows = useMemo(() => paginatedRules.map((rule, index) => [(activeRulePage - 1) * ruleItemsPerPage + index + 1, join(rule.antecedents), join(rule.consequents), `${rule.support_percentage}%`, `${rule.confidence_percentage}%`, rule.lift, rule.interpretation ?? "-"]), [activeRulePage, paginatedRules, ruleItemsPerPage]);
 
   return (
-    <DashboardLayout title="Laporan Apriori" description="Laporan hasil analisis association rule dan rekomendasi paket." role="Owner" userName="Owner Bengkel" eyebrow="Laporan">
+    <DashboardLayout title="Laporan Analisis Pola" description="Laporan aturan kombinasi dan rekomendasi paket." role="Owner" userName="Owner Bengkel" eyebrow="Laporan">
       <Toast toast={toast} />
       <section className="print-area">
         <div className="no-print mb-6 flex flex-wrap gap-2">
           <Button type="button" variant="secondary" onClick={() => window.print()}><Printer className="h-4 w-4" aria-hidden="true" />Print</Button>
         </div>
         <div className="print-only mb-4">
-          <h1 className="text-xl font-bold">Star Motor Insight</h1>
-          <p className="font-semibold">Laporan Hasil Apriori</p>
+          <h1 className="text-xl font-bold">Workshop Insight</h1>
+          <p className="font-semibold">Laporan Hasil Analisis Pola Transaksi</p>
           <p className="text-sm">Tanggal cetak: {formatDateTime(new Date().toISOString())}</p>
         </div>
         <Card className="no-print mb-6">
@@ -105,19 +105,19 @@ export default function OwnerAprioriReportPage() {
           </div>
         </Card>
         {isLoading || !report ? <LoadingState /> : !report.selected_run ? (
-          <EmptyState title="Belum ada hasil analisis Apriori" description="Jalankan analisis terlebih dahulu." icon={BrainCircuit} />
+          <EmptyState title="Belum ada hasil analisis pola" description="Jalankan analisis terlebih dahulu." icon={BrainCircuit} />
         ) : (
           <>
             <div className="mb-6 grid gap-4 md:grid-cols-4">
               <StatCard title="Transaksi Dianalisis" value={String(report.summary.total_transactions_analyzed)} icon={BrainCircuit} />
-              <StatCard title="Frequent Itemsets" value={String(report.summary.total_frequent_itemsets)} icon={BrainCircuit} tone="green" />
-              <StatCard title="Association Rules" value={String(report.summary.total_rules)} icon={BrainCircuit} tone="blue" />
+              <StatCard title="Kombinasi Item Sering Muncul" value={String(report.summary.total_frequent_itemsets)} icon={BrainCircuit} tone="green" />
+              <StatCard title="Aturan Kombinasi" value={String(report.summary.total_rules)} icon={BrainCircuit} tone="blue" />
               <StatCard title="Avg Confidence" value={`${report.summary.average_confidence}%`} icon={BrainCircuit} tone="orange" />
             </div>
             <div className="space-y-6">
               <Card>
-                <CardTitle title="Frequent Itemsets" description={report.selected_run.code} />
-                {itemsets.length === 0 ? <EmptyState title="Tidak ada frequent itemset" description="Tidak ada data sesuai filter." icon={BrainCircuit} /> : (
+                <CardTitle title="Kombinasi Item Sering Muncul" description={report.selected_run.code} />
+                {itemsets.length === 0 ? <EmptyState title="Tidak ada kombinasi item" description="Tidak ada data sesuai filter." icon={BrainCircuit} /> : (
                   <>
                     <DataTable columns={["No", "Items", "Item Count", "Support", "Support %"]} rows={itemsetRows} />
                     <Pagination
@@ -134,8 +134,8 @@ export default function OwnerAprioriReportPage() {
                 )}
               </Card>
               <Card>
-                <CardTitle title="Association Rules" description={`Highest lift: ${report.summary.highest_lift}`} />
-                {rules.length === 0 ? <EmptyState title="Tidak ada association rule" description="Tidak ada data sesuai filter." icon={BrainCircuit} /> : (
+                <CardTitle title="Aturan Kombinasi" description={`Lift tertinggi: ${report.summary.highest_lift}`} />
+                {rules.length === 0 ? <EmptyState title="Tidak ada aturan kombinasi" description="Tidak ada data sesuai filter." icon={BrainCircuit} /> : (
                   <>
                     <DataTable columns={["No", "Antecedents", "Consequents", "Support %", "Confidence %", "Lift", "Interpretation"]} rows={ruleRows} />
                     <Pagination

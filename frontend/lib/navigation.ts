@@ -27,7 +27,7 @@ export const adminNavigation = [
 
 export const ownerNavigation = [
   { label: "Dashboard", href: "/owner/dashboard", icon: Gauge },
-  { label: "Analisis Apriori", href: "/owner/apriori", icon: BarChart3 },
+  { label: "Analisis Pola", href: "/owner/apriori", icon: BarChart3 },
   { label: "Hasil Analisis", href: "/owner/apriori-results", icon: ClipboardList },
   { label: "Rekomendasi Paket", href: "/owner/recommendations", icon: Sparkles },
   { label: "Laporan", href: "/owner/reports", icon: FileBarChart },

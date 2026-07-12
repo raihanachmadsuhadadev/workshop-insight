@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Star Motor Insight",
+  title: "Workshop Insight",
   description:
     "Sistem transaksi bengkel dan analisis pola pembelian suku cadang serta layanan servis.",
 };
