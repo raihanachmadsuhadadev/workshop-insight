@@ -2,74 +2,13 @@
 
 Workshop Insight adalah aplikasi web untuk membantu pengelolaan transaksi bengkel, spare part, layanan servis, stok, dashboard, laporan, analisis pola transaksi, dan rekomendasi paket layanan berdasarkan data transaksi.
 
-Aplikasi ini dirancang untuk mendukung operasional bengkel agar data transaksi, item layanan, spare part, stok, laporan, dan hasil analisis dapat dikelola secara lebih terstruktur dalam satu sistem.
+Aplikasi ini dirancang untuk membantu operasional bengkel agar data transaksi, item layanan, spare part, stok, laporan, dan hasil analisis dapat dikelola secara lebih terstruktur.
 
 ## Ringkasan Sistem
 
-Workshop Insight mendukung alur operasional bengkel mulai dari pengelolaan master data, pencatatan transaksi, pembaruan stok, dan penyusunan laporan hingga analisis pola transaksi dan penyusunan rekomendasi paket layanan.
+Workshop Insight mendukung alur operasional bengkel mulai dari pengelolaan master data, pencatatan transaksi, pembaruan stok, dan pelaporan hingga analisis pola transaksi serta rekomendasi paket layanan.
 
-Admin berfokus pada pengelolaan data operasional sehari-hari, sedangkan Owner berfokus pada pemantauan dashboard, peninjauan laporan dan hasil analisis, serta pemanfaatan insight bisnis dari data transaksi.
-
-## Preview
-
-Berikut beberapa tampilan utama yang menggambarkan alur penggunaan Workshop Insight untuk pengelolaan operasional dan pemantauan bisnis bengkel.
-
-### Login
-
-![Halaman login Workshop Insight](docs/screenshots/01-login-page.png)
-
-### Dashboard Admin
-
-![Dashboard admin](docs/screenshots/02-dashboard-admin.png)
-
-### Manajemen Transaksi
-
-![Input transaksi bengkel](docs/screenshots/04-input-transaksi.png)
-
-### Manajemen Stok
-
-![Stok suku cadang](docs/screenshots/06-stok-suku-cadang.png)
-
-### Rekomendasi Paket Layanan
-
-![Rekomendasi paket layanan](docs/screenshots/10-rekomendasi-paket.png)
-
-### Laporan Transaksi
-
-![Laporan transaksi owner](docs/screenshots/11-laporan-transaksi.png)
-
-## Fitur Utama
-
-### Admin
-
-- Login sebagai admin.
-- Mengelola spare part dan layanan servis.
-- Mengelola pelanggan, mekanik, dan kategori item.
-- Mencatat transaksi bengkel.
-- Melihat detail transaksi.
-- Memantau stok dan mutasi stok.
-- Melihat laporan transaksi dan stok.
-
-### Owner
-
-- Login sebagai owner.
-- Melihat dashboard bisnis bengkel.
-- Menjalankan analisis pola transaksi.
-- Melihat kombinasi item yang sering muncul.
-- Melihat rekomendasi paket layanan.
-- Melihat laporan transaksi, stok, dan hasil analisis.
-
-## Analisis Pola Transaksi
-
-Sistem membaca transaksi bengkel yang telah selesai dan berisi satu atau lebih spare part dan/atau layanan servis. Data transaksi tersebut kemudian dianalisis untuk menemukan kombinasi item yang sering muncul secara bersamaan.
-
-Hasil analisis menggunakan beberapa metrik utama:
-
-- **Support** menunjukkan seberapa sering suatu item atau kombinasi item muncul dalam seluruh transaksi yang dianalisis.
-- **Confidence** menunjukkan kemungkinan kemunculan item tujuan ketika item awal terdapat dalam transaksi.
-- **Lift** menunjukkan kekuatan hubungan antaritem dibandingkan dengan kemunculan keduanya secara independen.
-
-Hasil ini dapat digunakan sebagai bahan pendukung untuk menyusun rekomendasi paket layanan, memahami pola transaksi pelanggan, dan membantu pengambilan keputusan bisnis. Hasil analisis tetap perlu ditinjau bersama konteks operasional bengkel.
+Admin berfokus pada pengelolaan data operasional sehari-hari. Owner berfokus pada pemantauan dashboard, laporan, hasil analisis, rekomendasi paket layanan, dan insight bisnis yang diperoleh dari data transaksi.
 
 ## Tech Stack
 
@@ -99,7 +38,81 @@ Hasil ini dapat digunakan sebagai bahan pendukung untuk menyusun rekomendasi pak
 - NPM
 - Git
 
-## Project Structure
+## Fitur Utama
+
+### Auth & Role
+
+- Login sebagai Admin dan Owner.
+- Pembatasan menu dan tindakan berdasarkan role pengguna.
+
+### Master Data
+
+- Pengelolaan spare part.
+- Pengelolaan layanan servis.
+- Pengelolaan pelanggan, mekanik, dan kategori item.
+
+### Transaction Management
+
+- Pencatatan transaksi bengkel.
+- Peninjauan detail transaksi.
+
+### Stock Management
+
+- Pembaruan stok berdasarkan transaksi.
+- Pemantauan stok dan mutasi stok.
+
+### Pattern Analysis
+
+- Analisis pola transaksi bengkel yang telah selesai.
+- Peninjauan kombinasi item yang sering muncul bersama.
+
+### Service Package Recommendation
+
+- Rekomendasi paket layanan berdasarkan hasil analisis pola transaksi.
+
+### Reports
+
+- Laporan transaksi.
+- Laporan stok.
+- Laporan hasil analisis.
+
+### UI/UX
+
+- Dashboard bisnis bengkel.
+- Tampilan pengelolaan data, transaksi, stok, analisis, rekomendasi, dan laporan yang disesuaikan dengan role pengguna.
+
+## Role & Akses
+
+Workshop Insight memiliki dua role utama. Tindakan yang dapat dilakukan dan menu yang ditampilkan mengikuti tanggung jawab masing-masing role.
+
+### Admin
+
+Admin bertanggung jawab mengelola data operasional bengkel dan memiliki akses ke:
+
+- Dashboard
+- Spare Part
+- Layanan Servis
+- Pelanggan
+- Mekanik
+- Kategori Item
+- Transaksi Bengkel
+- Stok dan Mutasi Stok
+- Laporan Transaksi
+- Laporan Stok
+
+### Owner
+
+Owner bertanggung jawab memantau performa bisnis dan meninjau hasil pengolahan data. Owner memiliki akses ke:
+
+- Dashboard
+- Analisis Pola Transaksi
+- Hasil Analisis
+- Rekomendasi Paket Layanan
+- Laporan Transaksi
+- Laporan Stok
+- Laporan Hasil Analisis
+
+## Struktur Project
 
 ```text
 workshop-insight/
@@ -113,60 +126,52 @@ workshop-insight/
 
 Nama layanan di atas bersifat konseptual. Nama folder internal dipertahankan untuk kompatibilitas project.
 
-## Database Overview
+## Screenshots
 
-Tabel inti berikut merepresentasikan data autentikasi, master data, transaksi bengkel, mutasi stok, serta penyimpanan hasil analisis:
+Berikut beberapa tampilan utama Workshop Insight yang menggambarkan proses autentikasi, pengelolaan transaksi dan stok, pemantauan dashboard, rekomendasi paket layanan, serta laporan.
 
-- `users`
-- `item_categories`
-- `spare_parts`
-- `service_items`
-- `customers`
-- `mechanics`
-- `transactions`
-- `transaction_items`
-- `stock_movements`
-- `analysis_runs`
-- `analysis_itemsets`
-- `analysis_rules`
+### Login
 
-## Main Workflow
+![Halaman login Workshop Insight](docs/screenshots/01-login-page.png)
 
-### Admin Flow
+### Dashboard Admin
 
-`Master Data → Transaction Entry → Stock Update → Reports`
+![Dashboard admin](docs/screenshots/02-dashboard-admin.png)
 
-Admin menyiapkan master data yang diperlukan, mencatat transaksi bengkel, memantau perubahan stok yang terkait dengan transaksi, lalu meninjau laporan operasional.
+### Input Transaksi
 
-### Owner Flow
+![Input transaksi bengkel](docs/screenshots/04-input-transaksi.png)
 
-`Dashboard → Run Pattern Analysis → Review Analysis Result → Review Package Recommendation → Reports`
+### Stok Spare Part
 
-Owner memantau ringkasan bisnis melalui dashboard, menjalankan analisis pola transaksi, meninjau hasil dan rekomendasi paket layanan, lalu menggunakan laporan sebagai bahan evaluasi.
+![Stok suku cadang](docs/screenshots/06-stok-suku-cadang.png)
 
-## Role Pengguna
+### Rekomendasi Paket Layanan
 
-Workshop Insight memiliki dua role utama dengan akses yang disesuaikan melalui role-based access:
+![Rekomendasi paket layanan](docs/screenshots/10-rekomendasi-paket.png)
 
-- **Admin** bertanggung jawab mengelola data operasional, meliputi spare part, layanan servis, pelanggan, mekanik, transaksi, stok, dan laporan.
-- **Owner** bertanggung jawab memantau performa bisnis, meninjau laporan, menjalankan analisis pola transaksi, dan meninjau rekomendasi paket layanan.
+### Laporan Transaksi
 
-## Developer Role
+![Laporan transaksi owner](docs/screenshots/11-laporan-transaksi.png)
 
-- Menganalisis alur pengelolaan transaksi dan stok bengkel.
-- Merancang arsitektur terpisah untuk backend, frontend, dan analysis service.
-- Mengembangkan backend API menggunakan Laravel, Sanctum, PostgreSQL, dan REST API.
-- Membangun halaman frontend menggunakan Next.js, TypeScript, dan Tailwind CSS.
-- Mengembangkan analysis service menggunakan Flask, Python, Pandas, dan mlxtend.
-- Menerapkan role-based access untuk Admin dan Owner.
-- Mengembangkan fitur transaksi, spare part, layanan servis, stok, laporan, analisis, dan rekomendasi paket layanan.
-- Menyiapkan akun demo, screenshot, dan dokumentasi project.
+## Persiapan Environment
 
-## Installation
+Pastikan perangkat pengembangan telah memiliki perangkat lunak berikut:
 
-Pastikan PostgreSQL, PHP, Composer, Node.js, NPM, dan Python telah tersedia sebelum menjalankan setiap layanan. Jalankan backend, frontend, dan analysis service pada terminal terpisah.
+- PHP
+- Composer
+- Node.js
+- npm
+- Python
+- pip
+- PostgreSQL
+- Git
 
-### Backend Setup
+Siapkan database PostgreSQL untuk aplikasi, lalu jalankan backend, frontend, dan analysis service pada terminal terpisah.
+
+## Setup Backend
+
+Dari root project, jalankan:
 
 ```bash
 cd backend
@@ -177,7 +182,15 @@ php artisan migrate --seed
 php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-### Frontend Setup
+Jika menggunakan Windows PowerShell dan perintah `cp` tidak tersedia, salin file environment dengan:
+
+```powershell
+copy .env.example .env
+```
+
+## Setup Frontend
+
+Dari root project, jalankan:
 
 ```bash
 cd frontend
@@ -185,7 +198,7 @@ npm install
 npm run dev
 ```
 
-### Analysis Service Setup
+## Setup Analysis Service
 
 Dari root project, gunakan Windows PowerShell untuk masuk ke folder service Python, membuat virtual environment, memasang dependensi, dan menjalankan service:
 
@@ -199,7 +212,7 @@ python app.py
 
 ## Environment Example
 
-Salin konfigurasi berikut ke file environment masing-masing layanan, lalu sesuaikan kredensial database dengan lingkungan lokal.
+Sesuaikan kredensial database dan alamat service dengan environment lokal.
 
 ### Backend `.env`
 
@@ -225,18 +238,40 @@ NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
 NEXT_PUBLIC_APP_NAME="Workshop Insight"
 ```
 
-## Demo Accounts
+## Akun Demo
 
-Akun berikut tersedia setelah proses seeding untuk mengakses fitur sesuai role masing-masing:
+Akun berikut tersedia setelah proses seeding:
 
 | Role | Email | Password |
 |---|---|---|
 | Admin | `admin@workshop.test` | `password` |
 | Owner | `owner@workshop.test` | `password` |
 
-## Validation Commands
+## Alur Penggunaan Sistem
 
-Gunakan perintah berikut untuk membersihkan cache dan memeriksa route backend, memvalidasi lint serta build frontend, dan memastikan analysis service dapat dijalankan.
+1. Login menggunakan akun demo.
+2. Admin mengelola master data seperti spare part, layanan servis, pelanggan, mekanik, dan kategori item.
+3. Admin mencatat transaksi bengkel.
+4. Sistem memperbarui stok dan mutasi stok.
+5. Admin atau Owner melihat laporan transaksi dan stok.
+6. Owner menjalankan analisis pola transaksi.
+7. Sistem menampilkan kombinasi item yang sering muncul.
+8. Sistem menampilkan rekomendasi paket layanan.
+9. Owner meninjau dashboard, laporan, hasil analisis, dan rekomendasi.
+
+## Analisis Pola Transaksi
+
+Sistem membaca transaksi bengkel yang telah selesai dan berisi spare part dan/atau layanan servis. Data tersebut kemudian dianalisis untuk menemukan kombinasi item yang sering muncul secara bersamaan.
+
+Hasil analisis menggunakan tiga metrik utama:
+
+- **Support** menunjukkan seberapa sering suatu item atau kombinasi item muncul dalam seluruh transaksi yang dianalisis.
+- **Confidence** menunjukkan kemungkinan kemunculan item tujuan ketika item awal terdapat dalam transaksi.
+- **Lift** menunjukkan kekuatan hubungan antaritem dibandingkan dengan kemunculan keduanya secara independen.
+
+Hasil analisis dapat digunakan sebagai bahan pendukung untuk menyusun rekomendasi paket layanan, memahami pola transaksi pelanggan, dan membantu pengambilan keputusan bisnis. Hasil tersebut tetap perlu ditinjau bersama konteks operasional bengkel.
+
+## Validasi Build
 
 ### Backend
 
@@ -262,14 +297,15 @@ python app.py
 
 Workshop Insight telah diselesaikan sebagai sistem manajemen bengkel berbasis web. Sistem mencakup pengelolaan transaksi, pengelolaan stok, pelaporan, analisis pola transaksi, dan rekomendasi paket layanan.
 
-Pengembangan berikutnya dapat mencakup grafik dashboard lanjutan, ekspor laporan, audit log, notifikasi, permission yang lebih terperinci, pengujian otomatis, konfigurasi deployment, serta penyempurnaan UI/UX.
+Sistem masih dapat dikembangkan lebih lanjut melalui grafik dashboard lanjutan, ekspor laporan, audit log, fitur notifikasi, permission yang lebih terperinci, pengujian otomatis, konfigurasi deployment, dan penyempurnaan UI/UX.
 
 ## Catatan Pengembangan Lanjutan
 
-- Ekspor laporan ke Excel/PDF.
+- Export laporan ke Excel/PDF.
 - Grafik dashboard yang lebih lengkap.
 - Audit log aktivitas pengguna.
 - Permission yang lebih detail.
 - Unit test dan integration test.
 - Deployment setup.
 - Optimasi analysis service.
+- Peningkatan UI/UX pada halaman analisis dan laporan.
