@@ -2,13 +2,23 @@
 
 Workshop Insight adalah aplikasi web untuk membantu pengelolaan transaksi bengkel, spare part, layanan servis, stok, dashboard, laporan, analisis pola transaksi, dan rekomendasi paket layanan berdasarkan data transaksi.
 
+Aplikasi ini dirancang untuk mendukung operasional bengkel agar data transaksi, item layanan, spare part, stok, laporan, dan hasil analisis dapat dikelola secara lebih terstruktur dalam satu sistem.
+
+## Ringkasan Sistem
+
+Workshop Insight mendukung alur operasional bengkel mulai dari pengelolaan master data, pencatatan transaksi, pembaruan stok, dan penyusunan laporan hingga analisis pola transaksi dan penyusunan rekomendasi paket layanan.
+
+Admin berfokus pada pengelolaan data operasional sehari-hari, sedangkan Owner berfokus pada pemantauan dashboard, peninjauan laporan dan hasil analisis, serta pemanfaatan insight bisnis dari data transaksi.
+
 ## Preview
+
+Berikut beberapa tampilan utama yang menggambarkan alur penggunaan Workshop Insight untuk pengelolaan operasional dan pemantauan bisnis bengkel.
 
 ### Login
 
 ![Halaman login Workshop Insight](docs/screenshots/01-login-page.png)
 
-### Dashboard
+### Dashboard Admin
 
 ![Dashboard admin](docs/screenshots/02-dashboard-admin.png)
 
@@ -20,23 +30,24 @@ Workshop Insight adalah aplikasi web untuk membantu pengelolaan transaksi bengke
 
 ![Stok suku cadang](docs/screenshots/06-stok-suku-cadang.png)
 
-### Rekomendasi Paket
+### Rekomendasi Paket Layanan
 
 ![Rekomendasi paket layanan](docs/screenshots/10-rekomendasi-paket.png)
 
-### Laporan
+### Laporan Transaksi
 
 ![Laporan transaksi owner](docs/screenshots/11-laporan-transaksi.png)
 
-## Key Features
+## Fitur Utama
 
 ### Admin
 
 - Login sebagai admin.
-- Mengelola data spare part dan layanan servis.
-- Mengelola data pelanggan, mekanik, dan kategori item.
-- Mencatat dan melihat detail transaksi bengkel.
-- Memantau stok serta riwayat mutasi stok.
+- Mengelola spare part dan layanan servis.
+- Mengelola pelanggan, mekanik, dan kategori item.
+- Mencatat transaksi bengkel.
+- Melihat detail transaksi.
+- Memantau stok dan mutasi stok.
 - Melihat laporan transaksi dan stok.
 
 ### Owner
@@ -48,24 +59,45 @@ Workshop Insight adalah aplikasi web untuk membantu pengelolaan transaksi bengke
 - Melihat rekomendasi paket layanan.
 - Melihat laporan transaksi, stok, dan hasil analisis.
 
-## Pattern Analysis Feature
+## Analisis Pola Transaksi
 
-Sistem membaca transaksi bengkel yang sudah selesai dan memiliki item transaksi berupa spare part atau layanan servis. Data tersebut digunakan untuk mencari kombinasi item yang sering muncul bersama.
+Sistem membaca transaksi bengkel yang telah selesai dan berisi satu atau lebih spare part dan/atau layanan servis. Data transaksi tersebut kemudian dianalisis untuk menemukan kombinasi item yang sering muncul secara bersamaan.
 
-Hasil analisis menampilkan metrik support, confidence, dan lift. Owner dapat memanfaatkan pola kombinasi transaksi tersebut untuk memahami kebiasaan pembelian pelanggan dan menilai peluang pembuatan paket layanan.
+Hasil analisis menggunakan beberapa metrik utama:
+
+- **Support** menunjukkan seberapa sering suatu item atau kombinasi item muncul dalam seluruh transaksi yang dianalisis.
+- **Confidence** menunjukkan kemungkinan kemunculan item tujuan ketika item awal terdapat dalam transaksi.
+- **Lift** menunjukkan kekuatan hubungan antaritem dibandingkan dengan kemunculan keduanya secara independen.
+
+Hasil ini dapat digunakan sebagai bahan pendukung untuk menyusun rekomendasi paket layanan, memahami pola transaksi pelanggan, dan membantu pengambilan keputusan bisnis. Hasil analisis tetap perlu ditinjau bersama konteks operasional bengkel.
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend | Laravel API |
-| Frontend | Next.js |
-| Language | TypeScript, PHP |
-| Styling | Tailwind CSS |
-| Database | PostgreSQL |
-| Authentication | Laravel Sanctum |
-| Analysis Service | Flask Service |
-| Data Processing | Python, Pandas, mlxtend |
+### Backend
+
+- Laravel API
+- Laravel Sanctum
+- PostgreSQL
+- REST API
+
+### Frontend
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+
+### Analysis Service
+
+- Flask
+- Python
+- Pandas
+- mlxtend
+
+### Tools
+
+- Composer
+- NPM
+- Git
 
 ## Project Structure
 
@@ -83,7 +115,7 @@ Nama layanan di atas bersifat konseptual. Nama folder internal dipertahankan unt
 
 ## Database Overview
 
-Tabel inti yang digunakan secara konseptual:
+Tabel inti berikut merepresentasikan data autentikasi, master data, transaksi bengkel, mutasi stok, serta penyimpanan hasil analisis:
 
 - `users`
 - `item_categories`
@@ -104,11 +136,35 @@ Tabel inti yang digunakan secara konseptual:
 
 `Master Data → Transaction Entry → Stock Update → Reports`
 
+Admin menyiapkan master data yang diperlukan, mencatat transaksi bengkel, memantau perubahan stok yang terkait dengan transaksi, lalu meninjau laporan operasional.
+
 ### Owner Flow
 
 `Dashboard → Run Pattern Analysis → Review Analysis Result → Review Package Recommendation → Reports`
 
+Owner memantau ringkasan bisnis melalui dashboard, menjalankan analisis pola transaksi, meninjau hasil dan rekomendasi paket layanan, lalu menggunakan laporan sebagai bahan evaluasi.
+
+## Role Pengguna
+
+Workshop Insight memiliki dua role utama dengan akses yang disesuaikan melalui role-based access:
+
+- **Admin** bertanggung jawab mengelola data operasional, meliputi spare part, layanan servis, pelanggan, mekanik, transaksi, stok, dan laporan.
+- **Owner** bertanggung jawab memantau performa bisnis, meninjau laporan, menjalankan analisis pola transaksi, dan meninjau rekomendasi paket layanan.
+
+## Developer Role
+
+- Menganalisis alur pengelolaan transaksi dan stok bengkel.
+- Merancang arsitektur terpisah untuk backend, frontend, dan analysis service.
+- Mengembangkan backend API menggunakan Laravel, Sanctum, PostgreSQL, dan REST API.
+- Membangun halaman frontend menggunakan Next.js, TypeScript, dan Tailwind CSS.
+- Mengembangkan analysis service menggunakan Flask, Python, Pandas, dan mlxtend.
+- Menerapkan role-based access untuk Admin dan Owner.
+- Mengembangkan fitur transaksi, spare part, layanan servis, stok, laporan, analisis, dan rekomendasi paket layanan.
+- Menyiapkan akun demo, screenshot, dan dokumentasi project.
+
 ## Installation
+
+Pastikan PostgreSQL, PHP, Composer, Node.js, NPM, dan Python telah tersedia sebelum menjalankan setiap layanan. Jalankan backend, frontend, dan analysis service pada terminal terpisah.
 
 ### Backend Setup
 
@@ -131,7 +187,7 @@ npm run dev
 
 ### Analysis Service Setup
 
-Dari root project, masuk ke satu-satunya folder service Python:
+Dari root project, gunakan Windows PowerShell untuk masuk ke folder service Python, membuat virtual environment, memasang dependensi, dan menjalankan service:
 
 ```powershell
 Set-Location (Get-ChildItem -Directory *-service | Select-Object -First 1 -ExpandProperty FullName)
@@ -142,6 +198,8 @@ python app.py
 ```
 
 ## Environment Example
+
+Salin konfigurasi berikut ke file environment masing-masing layanan, lalu sesuaikan kredensial database dengan lingkungan lokal.
 
 ### Backend `.env`
 
@@ -169,12 +227,16 @@ NEXT_PUBLIC_APP_NAME="Workshop Insight"
 
 ## Demo Accounts
 
+Akun berikut tersedia setelah proses seeding untuk mengakses fitur sesuai role masing-masing:
+
 | Role | Email | Password |
 |---|---|---|
 | Admin | `admin@workshop.test` | `password` |
 | Owner | `owner@workshop.test` | `password` |
 
 ## Validation Commands
+
+Gunakan perintah berikut untuk membersihkan cache dan memeriksa route backend, memvalidasi lint serta build frontend, dan memastikan analysis service dapat dijalankan.
 
 ### Backend
 
@@ -196,3 +258,18 @@ npm run build
 python app.py
 ```
 
+## Project Status
+
+Workshop Insight telah diselesaikan sebagai sistem manajemen bengkel berbasis web. Sistem mencakup pengelolaan transaksi, pengelolaan stok, pelaporan, analisis pola transaksi, dan rekomendasi paket layanan.
+
+Pengembangan berikutnya dapat mencakup grafik dashboard lanjutan, ekspor laporan, audit log, notifikasi, permission yang lebih terperinci, pengujian otomatis, konfigurasi deployment, serta penyempurnaan UI/UX.
+
+## Catatan Pengembangan Lanjutan
+
+- Ekspor laporan ke Excel/PDF.
+- Grafik dashboard yang lebih lengkap.
+- Audit log aktivitas pengguna.
+- Permission yang lebih detail.
+- Unit test dan integration test.
+- Deployment setup.
+- Optimasi analysis service.
