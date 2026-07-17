@@ -314,13 +314,3 @@ Workshop Insight telah diselesaikan sebagai sistem manajemen bengkel berbasis we
 
 Sistem masih dapat dikembangkan lebih lanjut melalui grafik dashboard lanjutan, ekspor laporan, audit log, fitur notifikasi, permission yang lebih terperinci, pengujian otomatis, konfigurasi deployment, dan penyempurnaan UI/UX.
 
-## Catatan Pengembangan Lanjutan
-
-- Export laporan ke Excel/PDF.
-- Grafik dashboard yang lebih lengkap.
-- Audit log aktivitas pengguna.
-- Permission yang lebih detail.
-- Unit test dan integration test.
-- Deployment setup.
-- Optimasi analysis service.
-- Peningkatan UI/UX pada halaman analisis dan laporan.
