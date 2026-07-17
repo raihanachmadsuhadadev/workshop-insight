@@ -112,6 +112,21 @@ Owner bertanggung jawab memantau performa bisnis dan meninjau hasil pengolahan d
 - Laporan Stok
 - Laporan Hasil Analisis
 
+## Developer Role
+
+Pengembangan aplikasi ini mencakup analisis workflow transaksi bengkel, pengelolaan stok, layanan servis, spare part, serta kebutuhan akses pengguna berdasarkan role.
+
+Tanggung jawab pengembangan meliputi:
+
+- Menganalisis alur transaksi bengkel, pengelolaan stok, layanan servis, spare part, dan kebutuhan akses pengguna.
+- Merancang struktur aplikasi dengan pemisahan backend, frontend, dan analysis service.
+- Mengembangkan backend API menggunakan Laravel, Laravel Sanctum, PostgreSQL, dan REST API.
+- Membangun frontend menggunakan Next.js, TypeScript, Tailwind CSS, dan integrasi API.
+- Mengembangkan analysis service menggunakan Flask, Python, Pandas, dan mlxtend untuk analisis pola transaksi.
+- Mengimplementasikan role-based access untuk Admin dan Owner.
+- Mengembangkan fitur transaksi bengkel, spare part, layanan servis, stok, laporan, analisis pola transaksi, dan rekomendasi paket layanan.
+- Menyiapkan akun demo, screenshot aplikasi, dan dokumentasi project.
+
 ## Struktur Project
 
 ```text
